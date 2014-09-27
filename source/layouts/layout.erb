@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+    <title>alchemy of [<%= " " + current_article.title + " " unless current_article.nil? %>]</title>
+    <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
+
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" media="(min-width: 767px)">
+    <%= stylesheet_link_tag "normalize", "layout", "syntax-theme", "theme" %>
+
+    <%= javascript_include_tag  "all" %>
+  </head>
+
+  <body class="<%= page_classes %>">
+    <header class="page">
+      <h1>[ ].blue</h1>
+    </header>
+    <main>
+
+      <% if current_article %>
+        <article>
+          <h1 class="title"><%= current_article.title %></h1>
+      <% end %>
+
+      <%= yield %>
+
+      <% if current_article %>
+        </article>
+      <% end %>
+
+    </main>
+    <footer>
+      footer (TODO)
+    </footer>
+  </body>
+</html>

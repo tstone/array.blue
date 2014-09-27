@@ -1,0 +1,177 @@
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  color: #555;
+}
+
+h1 {
+  font-weight: 400;
+  color: #333;
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: #333;
+}
+
+a {
+  color: #185b95;
+}
+
+header {
+  background-color: #23ceda;
+}
+
+header.page h1 {
+  position: relative;
+  left: 50px;
+  font-weight: 400;
+  color: #fff;
+  font-size: 103px;
+  display: inline-block;
+  position: absolute;
+  letter-spacing: -10px;
+  padding: 0 25px;
+  /* background-color: rgba(34, 181, 210, 0.25); */
+  background-color: rgba(34, 212, 99, 0.25);
+}
+
+code {
+  display: inline-block;
+  background-color: #eee;
+  padding: 1px 7px;
+  font-family: 'Monaco', monospace;
+  font-size: 16px;
+}
+
+blockquote {
+  margin: 40px 20px;
+}
+
+blockquote,
+blockquote p {
+  font-style: italic;
+  color: #aaa;
+  font-size: 20px;
+}
+
+p, article {
+  font-size: 18px;
+  line-height: 30px;
+}
+
+article {
+  position: relative;
+}
+
+article > a {
+  text-decoration: none;
+}
+
+article h3 {
+  font-size: 22px;
+}
+
+article h4,
+article h5 {
+  font-size: 18px;
+}
+
+article .title {
+  display: block;
+  font-weight: 600;
+  letter-spacing: -2px;
+}
+
+article .category {
+  text-indent: -9999px;
+}
+
+
+article .category.ruby {
+  background-image: url(../images/categories/ruby-20.png);
+}
+
+article .category.python {
+  background-image: url(../images/categories/python.png);
+}
+
+article .category.javascript {
+  background-image: url(../images/categories/javascript.jpg);
+}
+
+article .category.c-sharp {
+  background-image: url(../images/categories/csharp.jpg);
+}
+
+article .category.f-sharp {
+  background-image: url(../images/categories/fsharp.png);
+}
+
+article .category.git {
+  background-image: url(../images/categories/git.jpg);
+}
+
+article .category.scala {
+  background-image: url(../images/categories/scala.png);
+}
+
+article .category.windows {
+  background-image: url(../images/categories/windows.png);
+}
+
+.index article,
+.page article {
+  display: block;
+  line-height: 23px;
+}
+
+.index article:last-child,
+.page article:last-child {
+  margin-bottom: 0;
+}
+
+.index article .title,
+.page article .title {
+  font-size: 28px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+.index article .date,
+.page article .date {
+  color: #999;
+  font-size: 16px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.blog article .title {
+  font-size: 40px;
+  line-height: 42px;
+}
+
+.tags, .tags li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tags li {
+  display: inline-block;
+}
+
+.tags li a {
+  display: block;
+  margin-right: 5px;
+  margin-bottom: 8px;
+  background-color: #eee;
+  border: solid 1px #ddd;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #777;
+  text-decoration: none;
+  font-size: 12px;
+}

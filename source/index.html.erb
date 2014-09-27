@@ -1,0 +1,46 @@
+---
+pageable: true
+per_page: 20
+---
+
+
+<div role="main">
+  <% page_articles.each do |article| %>
+    <article>
+      <% link_to(article) do %>
+        <span class="title"><%= article.title %></span>
+        <span class="date"><%= article.date.strftime('%B %e, %Y') %></span>
+
+        <% if article.data.category %>
+          <span class="category <%= article.data.category %>"><%= article.data.category %></span>
+        <% end %>
+      <% end %>
+    </article>
+  <% end %>
+
+  <% if prev_page %>
+    <%= link_to "&lt; Newer", prev_page %>
+  <% end %>
+
+  <% if next_page %>
+    <%= link_to "Older &gt;", next_page %>
+  <% end %>
+</div>
+
+<aside>
+  <h2>Tags</h2>
+  <ol class="tags">
+    <% blog.tags.each do |tag, articles| %>
+      <% if articles.size > 1 %>
+        <li><%= link_to "#{tag}", tag_path(tag) %></li>
+      <% end %>
+    <% end %>
+  </ol>
+
+  <h2>By Year</h2>
+  <ol class="years">
+    <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+      <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
+    <% end %>
+  </ol>
+</aside>
