@@ -179,17 +179,17 @@ aside .pages a {
   line-height: 42px;
 }
 
-.tags, .tags li {
+ol.tags, ol.tags li {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.tags li {
+ol.tags li {
   display: inline-block;
 }
 
-.tags li a {
+ol.tags li a {
   display: block;
   margin-right: 5px;
   margin-bottom: 8px;

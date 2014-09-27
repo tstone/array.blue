@@ -16,24 +16,27 @@
   </head>
 
   <body class="<%= page_classes %>">
-    <header class="page">
-      <h1><a href="/">[ ].blue</a></h1>
-      <h6>Blog of Titus Stone</h6>
-    </header>
-    <main>
+    <div class="wrapper">
+      <header class="page">
+        <h1><a href="/">[ ].blue</a></h1>
+        <h6>Blog of Titus Stone</h6>
+      </header>
+      <main>
 
-      <% if current_article %>
-        <article>
-          <h1 class="title"><%= current_article.title %></h1>
-      <% end %>
+        <% if current_article %>
+          <article>
+            <h1 class="title"><%= current_article.title %></h1>
+        <% end %>
 
-      <%= yield %>
+        <%= yield %>
 
-      <% if current_article %>
-        </article>
-      <% end %>
+        <% if current_article %>
+          </article>
+        <% end %>
 
-    </main>
+      </main>
+    </div>
+
     <footer>
       <span>&copy; Titus Stone</span>
       <a href="http://github.com/tstone">Github</a>
