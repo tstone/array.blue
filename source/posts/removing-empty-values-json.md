@@ -30,7 +30,7 @@ tuples of type `String`, `JsValueWrapper`.  However, in the above code when we d
 but actually of type `String`.  An implicit conversion is being implied here:
 
 ```scala
-implicit def AnyToJsValueWrapper[A](any: A)(implicit writer: Writes[A]) = ...
+implicit def toJsFieldJsValueWrapper[A](any: A)(implicit writer: Writes[A]) = ...
 ```
 
 Effectively, in order for us to be able to say `Json.obj("name" -> person.name)` it means we must have an implicit `String => Writes[String]` in scope.  For
