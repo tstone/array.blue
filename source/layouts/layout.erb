@@ -7,9 +7,7 @@
     <%= feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed" %>
 
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" media="(min-width: 767px)">
-    <%= stylesheet_link_tag "normalize", "layout", "syntax-theme", "theme", "icons" %>
-
-    <%= javascript_include_tag  "all" %>
+    <%= stylesheet_link_tag "all" %>
   </head>
 
   <body class="<%= page_classes %>">
