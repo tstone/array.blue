@@ -2,7 +2,7 @@
 title: Moving to Middleman
 category: ruby
 tags: blog, ruby
-date: September 27, 2014
+date: September 20, 2014
 ---
 
 [Back in 2012](/blog/2012/microwave-js.html) I started working on blog platform named [Microwave.JS](https://github.com/tstone/MicrowaveJS). At
