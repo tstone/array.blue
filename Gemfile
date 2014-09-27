@@ -11,3 +11,4 @@ gem "middleman-minify-html"
 gem "nokogiri"
 gem "redcarpet"
 gem "builder", "~> 3.0"
+gem "turbolinks", require: false
