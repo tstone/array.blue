@@ -82,7 +82,7 @@ article h5 {
 
 
 /* DESKTOP */
-/* @media (min-width: 1024px) { */
+@media (min-width: 1024px) {
 
   main {
     width: 900px;
@@ -101,7 +101,7 @@ article h5 {
     top: 0;
     right: 0;
   }
-/* } */
+}
 
 
 /* DEVICE */
