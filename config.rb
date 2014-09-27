@@ -30,6 +30,15 @@ activate :blog do |blog|
   blog.page_link = "page/{num}"
 end
 
+activate :deploy do |deploy|
+  deploy.build_before = true
+  deploy.method = :git
+  deploy.remote = "ghpage"
+  deploy.branch = "master"
+  # deploy.strategy = :submodule      # commit strategy: can be :force_push or :submodule, default: :force_push
+  # deploy.commit_message = 'custom-message'      # commit message (can be empty), default: Automated commit at `timestamp` by middleman-deploy `version`
+end
+
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true
 
