@@ -26,6 +26,7 @@
         <% if current_article %>
           <article>
             <h1 class="title"><%= current_article.title %></h1>
+            <h4 class="date"><%= current_article.date.strftime('%B %e, %Y') %></h4>
         <% end %>
 
         <%= yield %>

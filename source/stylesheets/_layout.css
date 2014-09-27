@@ -49,6 +49,34 @@ hr {
   margin-bottom: 30px;
 }
 
+.index article,
+.page article {
+  margin-bottom: 60px;
+  padding-left: 40px;
+}
+
+.presentations article {
+  margin-bottom: 30px;
+}
+
+article h2,
+article h3 {
+  margin-top: 40px;
+}
+
+article h4,
+article h5 {
+  margin-top: 40px;
+}
+
+.index article .category,
+.page article .category {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+}
 
 
 
@@ -71,43 +99,10 @@ hr {
     top: 0;
     right: 0;
   }
-
-  .index article,
-  .page article {
-    margin-bottom: 60px;
-    padding-left: 40px;
-  }
-
-  .presentations article {
-    margin-bottom: 30px;
-  }
-
-  article h2,
-  article h3 {
-    margin-top: 40px;
-  }
-
-  article h4,
-  article h5 {
-    margin-top: 40px;
-  }
-
-  .index article .category,
-  .page article .category {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    height: 20px;
-    width: 20px;
-  }
-
-  .blog article .title {
-    margin-top: 0;
-    margin-bottom: 30px;
-  }
 }
 
-/* MOBILE */
+
+/* DEVICE */
 @media (max-width: 1023px) {
   main {
     position: relative;
@@ -123,39 +118,5 @@ hr {
   aside {
     position: relative;
     width: 100%;
-  }
-
-  .index article,
-  .page article {
-    margin-bottom: 60px;
-    padding-left: 40px;
-  }
-
-  .presentations article {
-    margin-bottom: 30px;
-  }
-
-  article h2,
-  article h3 {
-    margin-top: 40px;
-  }
-
-  article h4,
-  article h5 {
-    margin-top: 40px;
-  }
-
-  .index article .category,
-  .page article .category {
-    position: absolute;
-    top: 1px;
-    left: 0;
-    height: 20px;
-    width: 20px;
-  }
-
-  .blog article .title {
-    margin-top: 0;
-    margin-bottom: 30px;
   }
 }

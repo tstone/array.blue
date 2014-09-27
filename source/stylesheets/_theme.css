@@ -177,6 +177,15 @@ aside .pages a {
 .blog article .title {
   font-size: 40px;
   line-height: 42px;
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+.blog article .date {
+  font-weight: 400;
+  font-size: 14px;
+  color: #aaa;
+  margin: 0 0 40px 0;
 }
 
 ol.tags, ol.tags li {
