@@ -29,7 +29,7 @@ Turns out, all of this is possible.
 
 That's pretty much it.  Zsh is now on your system wherever you installed it.  By default when you launch the Cygwin prompt it will be running bash.  In a second we'll look at changing this.
 
-![Alt Stock Cygwin](/public/stock-cygwin.png)
+![Alt Stock Cygwin](/images/stock-cygwin.png)
 
 ## Now Give it a Better UI
 
@@ -111,7 +111,7 @@ And add this line:
 
 Restart your zsh and now every type you do `ls` you should get a colorized version, in monokai colors (or the scheme of your choice).
 
-![Alt Console2 with Monokai Colors](/public/console2.png)
+![Alt Console2 with Monokai Colors](/images/console2.png)
 
 ## And Add Some Cool Tricks
 

@@ -9,7 +9,7 @@ One of the annoying things about using multiple platforms is when one platform h
 
 However, I just found a really amazing tool called [BareTail](http://www.baremetalsoft.com/baretail/).
 
-![](/public/baretail.jpg)
+![screenshot](/images/baretail.jpg)
 
 BareTail “connects” to a log file, and shows you an automatically updated (live) tail of that file. It basically allows this situation to happen:
 

@@ -19,15 +19,15 @@ Introducing: [MarkEdit](http://bitbucket.org/tstone/jquery-markedit) — the Jav
 
 Since everybody loves screenshots, here’s the editor running under a jQuery theme and using the Chinese language translation.
 
-![](/public/wmd1.png)
+![](/images/wmd1.png)
 
 And again here’s a translated popup asking for the URL to insert an image…
 
-![](/public/wmd2.png)
+![](/images/wmd2.png)
 
 And here’s preview mode using a different theme but still in Chinese…
 
-![](/public/wmd3.png)
+![](/images/wmd3.png)
 
 So far I’ve invested about 15 hours into the project with it being probably around 95% complete for initial coding. There is still a TON of testing to be done. I haven’t even tried to fire it up in any of the fussy browsers yet.
 
