@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd"
+    >
+<html lang="en">
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,700,800,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="presentation.css" />
+    <link rel="stylesheet" href="vendor/prettify-theme.css" />
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="vendor/fathom.js"></script>
+    <script src="vendor/prettify.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('pre').addClass('prettyprint').attr('tabIndex', 0);
+            prettyPrint();
+
+            var fathom = $('#presentation').Fathom({
+                onActivateSlide: function() {
+                    var $slide = $(this);
+                    $slide.find('pre:first').focus();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="presentation">
+
+        <div class="slide">
+            <pre style="margin-top: 35%">confirm('Can you read this from where you are sitting?')</pre>
+        </div>
+
+        <div class="slide">
+            <h1 style="margin-top: 20%;">A Look at Native OO Using Prototype</h1>
+            <h2 style="text-align: center;">(No, not the framework.)</h2>
+            <h3 style="margin-top: 30%; font-size: 22px; margin-bottom: 10px;">Titus Stone</h3>
+            <table>
+                <tr><td style="width: 30%;">Email</td><td>titus@theblogfrog.com</td></tr>
+                <tr><td>Twitter</td><td>@andstuff</td></tr>
+                <tr><td>Github</td><td>https://github.com/tstone</td></tr>
+            </table>
+        </div>
+
+        <div class="slide">
+            <h1>Token Definition First Slide</h1>
+            <h2>prototype</h2>
+            <p>the original or model on which something is based or formed</p>
+        </div>
+
+        <div class="slide">
+            <h1>Creating New Types</h1>
+            <h2>Defining a new (blank) type</h2>
+            <pre>var myType = function(){};</pre>
+            <h2>Creating an instance of that type</h2>
+            <pre>var a = new myType();</pre>
+            <h2>What does this all mean?</h2>
+            <pre>typeof myType
+// => "function"
+typeof a
+// => "object"</pre>
+        </div>
+
+        <div class="slide">
+            <h1>Types/functions have a special property to assign members</h1>
+            <pre>var myType = function(){};
+
+// Members added to the prototype, just like assigning
+// keys to a hash
+myType.prototype.value = 2000;
+myType.prototype['name'] = 'Jim';</pre>
+        </div>
+
+        <div class="slide">
+            <h1>Members on the prototype become "available" on the instance</h1>
+            <pre>var myType = function(){};
+myType.prototype.value = 2000;
+myType.prototype['name'] = 'Jim';
+
+var x = new myType();
+console.log(x.name);
+// => "Jim"</pre>
+            <h2>Nowhere was the key/member "name" assigned to the instance "x":</h2>
+            <pre>var x = new myType();
+// Didn't happen:
+x.name = 'Jim';</pre>
+        </div>
+
+        <div class="slide">
+            <h1>This works because JS recursivley searches for members</h1>
+            <pre>console.log(x.name);</pre>
+            <ul>
+                <li>Does this instance "x" have a member of key "name"?</li>
+                <li>If not, does this instance's prototype have a member of key "name"?</li>
+                <li>If not, does this instance's prototype's prototype have a member of key "name"?</li>
+                <li>etc.</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <h1>Every type has a prototype.</h1>
+            <pre>typeof Object.prototype
+// => "object"</pre>
+<h2>JS automatically assigns a prototype, even if the code doesn't specify</h2>
+            <pre>var typeA = function(){};
+var typeB = function(){};
+typeB.prototype = new Object();
+
+typeof typeA.prototype === typeof typeB.prototype
+// => true</pre>
+        </div>
+
+        <div class="slide">
+            <h1>Things to Note:</h1>
+            <pre>// Right:
+typeB.prototype = new Object();
+
+// Wrong:
+typeB.prototype = Object;</pre>
+            <ul>
+                <li>The prototype of typeB is a <strong>new instance</strong> of Object</li>
+                <li>This is a major departure from classical OO</li>
+            </ul>
+            <pre>// ie. This doens't happen in C#
+public class typeB : new Object()
+{
+    // ...
+}</pre>
+        </div>
+
+        <div class="slide">
+            <h1>The prototype of a type can be assigned to a user type</h1>
+            <pre>var Being = function(){};
+Being.prototype.alive = true;
+
+var Human = function(){};
+Human.prototype = new Being();
+Human.prototype.constructor = Human;  // Ignore for now
+
+var titus = new Human();
+titus.alive
+// => true</pre>
+        </div>
+
+        <div class="slide">
+            <h1>Things to Note:</h1>
+            <pre>// Does Human have a member "alive"?
+var titus = new Human();
+titus.alive
+// => true</pre>
+            <ul>
+                <li>Members of a prototype's prototype are avaialble after 2 hops</li>
+            </ul>
+        </div>
+
+<div class="slide">
+            <h1>An instance can be accessed from within itself: this</h1>
+            <pre>var Invoice = function(){};
+
+Invoice.prototype.amount = 2000;
+
+Invoice.prototype.pay = function(bank) {
+    bank.transfer(this.amount);
+}
+
+var i = new Invoice();
+i.pay(...);</pre>
+        </div>
+
+        <div class="slide">
+            <h1><em>this</em> is where things get tricky</h1>
+            <h2>Rule of Thumb: Every method in JS is an instance method</h2>
+            <pre>function debugCurrentUrl() {
+    // What is the value of "this"?
+    console.log(this.location.href);
+}
+
+debugCurrentUrl();
+// => "file:///C:/Users/Titus/Desktop/JS%20Pres/presentation.html"</pre>
+            <h2>Behind the scenes, JS always assigns a value to "this"</h2>
+        </div>
+
+        <div class="slide">
+            <h1><em>this</em> can be specified</h1>
+            <pre>name = 'Bill';
+
+function printName() {
+    console.log(this.name);
+}
+
+var myType = function(){};
+myType.prototype.name = 'Jen';
+myType.prototype.printName = function() {
+    console.log(this.name);
+}
+var a = new myType();
+
+printName();
+// => "Bill"
+
+printName.call(a);
+a.printName()
+// => "Jen"</pre>
+        </div>
+
+        <div class="slide">
+            <h1>More Black Magic</h1>
+            <h2>In this case, javascript is automatically binding "window" to the value of "this"</h2>
+<pre>// These are equivalents:
+printName();
+printName.apply(window); // js magic</pre>
+
+<h2>In this case, we are manually specifying the value of "this" to be "a"</h2>
+<pre>printName.apply(a);</pre>
+
+<h2>And in this case, javascript is automatically binding "a" to the value of "this" on the prototype's function</h2>
+<pre>// These are also equivalents:
+a.printName()
+a.prototype.printName.apply(a); // js magic</pre>
+        </div>
+
+        <div class="slide">
+            <h1>JS automatically binds the child instance when executing parent methods</h1>
+            <pre>var parentType = function(){};
+parentType.prototype.name = 'Bill';
+parentType.prototype.print = function() {
+    console.log(this.name);
+};
+
+var childType = function(){};
+childType.prototype.name = 'Frank';
+
+var a = new childType();
+a.print();
+// => "Frank";</pre>
+        </div>
+
+        <div class="slide">
+            <h1>Common Trip-ups (#1)</h1>
+            <h2>Unlike classic OO, javascript does not automatically bind "this" if the function is passed as a value!</h2>
+            <pre>var Widget = function(){};
+
+Widget.prototype.load = function() {
+    $('button').click(this.onClick);
+}
+
+Widget.prototype.onClick = function() {
+    // this === window!!
+}</pre>
+            <h2>JS would bind "this" correctly if the code were...</h2>
+            <pre>$('button').click(this.onClick());</pre>
+            <h2>... but that would be wrong</h2>
+        </div>
+
+        <div class="slide">
+            <h1>Common Trip-ups (#1) - A Fix</h1>
+            <pre>var Widget = function(){};
+
+Widget.prototype.load = function() {
+    var that = this;
+    $('button').click(function() {
+        that.onClick.apply(that, Array.prototype.slice.apply(arguments));
+    });
+}
+
+Widget.prototype.onClick = function() {
+    // this === actual instance
+}</pre>
+            <h2>This is SUPER UGLY</h2>
+        </div>
+
+                <div class="slide">
+            <h1>Common Trip-ups (#1) - A Nicer Fix</h1>
+            <pre>var Widget = function(){};
+
+Widget.prototype.load = function() {
+    $('button').click(this.onClick.bind(this));
+}
+
+Widget.prototype.onClick = function() {
+    // this === actual instance
+}</pre>
+            <h2>Better, but still redundant.</h2>
+            <h3>Also, this doesn't work in Safari 4 or IE7 (big surprise).</h3>
+        </div>
+
+        <div class="slide">
+            <h1>Common Trip-ups (#2)</h1>
+            <pre>var myType = function(){};
+myType.prototype.config = {
+    vector: 35
+};
+
+var a = new myType();
+a.config.vector = 25;
+
+var b = new myType();
+console.log(b.config.vector);
+// => 25;
+        </div>
+
+    <div class="slide">
+        <h1>Common Trip-ups (#2) - A fix</h1>
+        <pre>var myType = function(){};
+myType.prototype.init = function() {
+    this.config = {
+        vector: 35;
+    }
+};
+
+var a = new myType();
+// This is the cost of this pattern:
+a.init();</pre>
+        <h2>This works because JS will always bind the correct value of "this" when executing the function</h2>
+    </div>
+
+    <div class="slide">
+        <h1>Common Trip-ups (#3) - A Fix</h1>
+        <h2>Typing .prototype all the time is fugly</h2>
+        <pre>var myType = function(){};
+(function(type){
+
+    type.init = function() {
+        // ...
+    };
+
+    type.property = 'value';
+
+}(myType.prototype));</pre>
+        <h2>The self-executing function pattern lets us wrap a nicer keyword for defining prototypes</h2>
+    </div>
+
+    <div class="slide">
+        <h1>Common Trip-ups (#3) - A Fix</h1>
+        <h2>This pattern also gives us nicer child/parent relationships</h2>
+        <pre>var childType = function(){};
+(function(type, parent){
+
+    type.init = function() {
+        // Code that runs before the parent
+        // ...
+
+        // Invoke base method
+        parent.init.apply(this);
+    };
+
+}(childType.prototype, parentType.prototype));</pre>
+    </div>
+
+    <div class="slide">
+        <h1 style="margin-top: 30%;">Is there a better way to do all this?</h1>
+    </div>
+
+    <div class="slide">
+        &nbsp;
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Taig Speeds &amp; Feeds Calculator</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Satisfy|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+      body { background-color: #444; width: 910px; margin: 35px auto; color: #eee; font-family: 'Open Sans', sans-serif; position: relative;
+             background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQIW2NkYGCYCcRSQAwGjEC8GcZBF3gGUomhAgCBzAPRGNKUEwAAAABJRU5ErkJggg==); }
+      h1, h2, h3 { margin: 0; font-family: 'Satisfy', cursive; }
+      h1 { font-size: 50px; letter-spacing: -3px; color: #fff; text-shadow: 0 1px 15px rgba(0, 0, 0, 0.75); text-align: center; margin: 0 0 15px 0; }
+      h2 { font-size: 28px; letter-spacing: -1px;  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75); }
+      h3 { font-size: 11px; text-transform: uppercase; font-family: 'Open Sans', sans-serif; }
+      table { width: 100%; }
+      td { font-size: 13px; height: 26px; line-height: 25px; border-bottom: solid 1px #444; position: relative; }
+      tr:last-child td { border-bottom: 0; }
+      thead td { text-align: center; }
+      td.label { width: 40%; }
+      td.rpm, td.ipm { text-align: right; }
+
+      fieldset { margin: 5px 0 20px 0; padding: 0; border: 0; position: relative; }
+      legend { font-size: 18px; font-weight: bold; letter-spacing: -1px; margin-bottom: 10px; }
+      label { font-size: 13px; color: #aaa; display: inline-block; margin-right: 8px; width: 75px; text-align: left; }
+      input[type="text"], select { background-color: #333; border: 1px solid #777; color: #ccc; font-size: 14px; padding: 4px 6px; }
+      input[type="text"] { text-align: right; width: 100px; }
+      .radio-group { display: block; width: 50%; }
+      .radio-group.metric { position: absolute; right: 0; top: 0; }
+      .radio-group section { column-count: 2; -webkit-column-count: 2; }
+      .radio-group label { text-align: left; }
+
+      .container { background-color: #333; padding: 10px 25px; margin-bottom: 10px; box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25); }
+      .right { position: absolute; right: 0; top: 0; }
+      .right label { text-align: right; }
+      .output { width: 375px; position: absolute; top: 90px; right: 0; height: 275px; }
+      .input { width: 500px; position: absolute; top: 90px; left: 0; padding-top: 15px; padding-bottom: 15px; }
+
+      .recommended { color: #ff6666; font-weight: bold; }
+      .recommended td { font-size: 16px; }
+      .out-of-range { color: #666; }
+      /* .out-of-range td:first-child::before { content: "x"; position: absolute; left: -18px; top: 7px; font-size: 11px; font-weight: bold; background-color: #555; color: #333; display: block; height: 12px; width: 12px; line-height: 10px; text-align: center; border-radius: 6px; opacity: 0.75; } */
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Taig Mill Speed &amp; Feed Calc</h1>
+
+    <div class="container input">
+      <h2>Material</h2>
+      <fieldset class="material">
+        <select name="material"></select>
+
+        <div class="right">
+          <label for="sfm" class="sfm">SFM</label>
+          <input type="text" name="sfm" value="400" />
+        </div>
+      </fieldset>
+
+      <h2>Tool</h2>
+      <fieldset class="tool">
+        <div class="radio-group">
+          <h3>Imperial</h3>
+          <section>
+            <label><input type="radio" name="diameter-radio" value="0.015625">1/64"</label>
+            <label><input type="radio" name="diameter-radio" value="0.03124">1/32"</label>
+            <label><input type="radio" name="diameter-radio" value="0.046875">3/64"</label>
+            <label><input type="radio" name="diameter-radio" value="0.0625">1/16"</label>
+            <label><input type="radio" name="diameter-radio" value="0.09375">3/32"</label>
+            <label><input type="radio" name="diameter-radio" value="0.125" checked="checked">1/8"</label>
+            <label><input type="radio" name="diameter-radio" value="0.15625">5/32"</label>
+            <label><input type="radio" name="diameter-radio" value="0.1875">3/16"</label>
+            <label><input type="radio" name="diameter-radio" value="0.25">1/4"</label>
+            <label><input type="radio" name="diameter-radio" value="0.375">3/8"</label>
+          </section>
+        </div>
+        <div class="radio-group metric">
+          <h3>Metric</h3>
+          <section>
+            <label><input type="radio" name="diameter-radio" value="0.0393701">1mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.0787402">2mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.11811">3mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.15748">4mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.19685">5mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.23622">6mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.275591">7mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.314961">8mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.354331">9mm</label>
+            <label><input type="radio" name="diameter-radio" value="0.393701">10mm</label>
+          </section>
+        </div>
+      </fieldset>
+
+      <fieldset class="tool-physic">
+        <label for="diameter">Diameter</label>
+        <input type="text" name="diameter" value="0.125" />
+
+        <div class="right">
+          <label for="flutes">Flutes</label>
+          <input type="text" name="flutes" value="4" />
+        </div>
+      <fieldset>
+    </div>
+
+    <div class="container output">
+      <table>
+        <thead>
+          <tr><td></td><td>Speed</td><td>Feedrate</td></tr>
+        </thead>
+        <tbody id="output">
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      (function(){
+
+        // => Data
+
+        var maxSpeed = 10500;
+        var maxFeed = 40;
+
+        var materials = {
+          'Acrylic / ABS / Styrene (Plastics)': { minSfm: 200, maxSfm: 600, chipLoad125: 0.001, chipLoad1875: 0.002, chipLoad25: 0.003, chipLoad375: 0.004 },
+          'Aluminum (356, 380, 440)': { minSfm: 500, maxSfm: 1000, chipLoad125: 0.001, chipLoad1875: 0.002, chipLoad25: 0.002, chipLoad375: 0.003 },
+          'Aluminum (2014, 2024, 6061, 7075)': { minSfm: 800, maxSfm: 1500, chipLoad125: 0.001, chipLoad1875: 0.002, chipLoad25: 0.002, chipLoad375: 0.003 },
+          'Aluminum + Bronze Alloy': { minSfm: 800, maxSfm: 1000, chipLoad125: 0.001, chipLoad1875: 0.001, chipLoad25: 0.002, chipLoad375: 0.0025 },
+          'Carbon / Grahite': { minSfm: 500, maxSfm: 1000, chipLoad125: 0.004, chipLoad1875: 0.004, chipLoad25: 0.006, chipLoad375: 0.008 },
+          'Copper (Navel Brass)': { minSfm: 600, maxSfm: 1000, chipLoad125: 0.001, chipLoad1875: 0.001, chipLoad25: 0.002, chipLoad375: 0.0025 },
+          'Copper (Yellow Brass)': { minSfm: 800, maxSfm: 1500, chipLoad125: 0.001, chipLoad1875: 0.001, chipLoad25: 0.002, chipLoad375: 0.0025 },
+          'Die Cast (Magnesium)': { minSfm: 1000, maxSfm: 1000, chipLoad125: 0.001, chipLoad1875: 0.002, chipLoad25: 0.002, chipLoad375: 0.003 },
+          'Nickel Silver': { minSfm: 700, maxSfm: 1000, chipLoad125: 0.001, chipLoad1875: 0.001, chipLoad25: 0.002, chipLoad375: 0.0025 },
+          'Polycarbonate (Plastics)': { minSfm: 200, maxSfm: 500, chipLoad125: 0.001, chipLoad1875: 0.002, chipLoad25: 0.003, chipLoad375: 0.004 }          
+        };
+
+        var speeds = [ 10500, 6500, 4300, 2900, 1900, 1100 ];
+
+
+        // => Logic
+
+        var doMath = function() {
+          var material = val('material');
+          var sfm = val('sfm');
+          var diameter = val('diameter');
+          var flutes = val('flutes');
+
+          // Determine actual and recommended
+
+          var recommendedRpm = calculateRPM(sfm, diameter);
+          var actualRpm = recommendedRpm;
+
+          if (recommendedRpm > maxSpeed) { recommendedRpm = maxSpeed; }
+          
+          var recommendedIpm = calculateIPM(material, recommendedRpm, diameter, flutes);
+          var actualIpm = recommendedIpm;
+
+          if (recommendedIpm > maxFeed) {
+            recommendedIpm = maxFeed;
+            recommendedRpm = backCalculateRPM(recommendedIpm, material, diameter, flutes);
+          }
+
+          // addDataRow('Best', recommendedRpm, recommendedIpm, 'recommended');
+
+          var output = $('#output')
+          output.fadeOut(100, function() {
+            output.html('');         
+
+            if (actualRpm > recommendedRpm || actualIpm > recommendedIpm) {
+              addDataRow('Ideal', actualRpm, actualIpm, 'actual');
+            }
+            
+            // Calculate for each speedstep
+            var haveRecommended = false;
+            for (var i = 0; i < speeds.length; i++) {
+              var rpm = speeds[i];
+              var ipm = calculateIPM(material, rpm, diameter, flutes)
+              var classes = '';
+
+              if (rpm <= maxSpeed && ipm <= maxFeed && !haveRecommended) {
+                haveRecommended = true;
+                classes = 'recommended';
+              }
+
+              var beltPos = i + 1;
+              addDataRow('Belt Position '+ beltPos, rpm, ipm, classes);
+            };
+
+            output.fadeIn(300);
+          });
+
+        };
+
+        var addDataRow = function(label, rpm, ipm, extraClass) {
+          if (typeof extraClass === 'undefined') { extraClass = ''; }
+          if (rpm > maxSpeed || ipm > maxFeed) { extraClass += ' out-of-range'; }
+          $('#output').append('<tr class="'+ extraClass +'"><td class="label">'+ label +'</td><td class="rpm">'+ formatNum(rpm) +' RPM</td><td class="ipm">'+ formatNum(ipm) +' IPM</td></tr>');
+        };
+
+        var changeMaterial = function(m) {
+          var material = materials[m];
+          var sfm = (material.maxSfm + material.minSfm) / 2
+          $('[name="sfm"]').val(sfm);
+        };
+
+        var calculateRPM = function(sfm, d) {
+          return (3.82 * sfm) / d;
+        };
+
+        var backCalculateRPM = function(ipm, m, d, flutes) {
+          return ipm / chipLoad(d, m) / flutes;
+        }
+
+        var calculateIPM = function(m, rpm, d, flutes) {
+          return rpm * chipLoad(d, m) * flutes;
+        };
+
+        var chipLoad = function(d, m) {
+          var material = materials[m]
+
+          if (d <= 0.125) {
+            return material.chipLoad125;
+          } else if (d > 0.125 && d <= 0.1875) {
+            return material.chipLoad1875;
+          } else if (d > 0.1875 && d <= 0.25) {
+            return material.chipLoad25;
+          } else if (d > 0.25) {
+            return material.chipLoad375;
+          }
+        };
+
+        var val = function(which) {
+          if (which == "material") {
+            return $('[name="material"] :selected').text();
+          } else {
+            return parseFloat($('[name="'+ which +'"]').val(), 10);
+          }
+        };
+
+        var formatNum = function(num) {
+          num = parseInt(num, 10);
+          num = num.toString();
+          if (num.length > 3) {
+            var rev = num.split('').reverse()
+            num = rev.slice(3, rev.length).reverse().join('') + ',' + rev.slice(0, 3).reverse().join('');
+          }
+          return num;
+        };
+
+        // => Events
+
+        var inputClamp;
+        $('#calculate').click(doMath);
+
+        $('input:text').bind('click, change, blur, keypress, keyup', function() {
+          clearTimeout(inputClamp);
+          inputClamp = setTimeout(doMath, 500);
+        });
+        
+        $('input:text').focus(function(){
+          $(this).one('mouseup', function(event){
+              event.preventDefault();
+          }).select();
+        });
+
+        $('select[name="material"]').change(function(){
+          var material = materials[val('material')];
+          var sfm = (material.maxSfm + material.minSfm) / 2;
+          $('[name="sfm"]').val(sfm);
+          doMath();
+        });
+
+        $('[name="diameter-radio"]').bind('click', 'change', function() {
+          var d = parseFloat($('[name="diameter-radio"]:checked').val(), 10);
+          $('[name="diameter"]').val(d);
+          doMath();
+        });
+
+        // => DOM Ready
+
+        $(function() {
+          var m = $('[name="material"]');
+          for (var key in materials) {
+            m.append('<option>'+ key +'</option>');
+          }
+          doMath();
+        });
+      }());
+    </script>
+  </body>
+</html>

@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>The Script of Coffee</title>
+
+		<meta name="description" content="Coffeescript">
+		<meta name="author" content="Titus Stone">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		<style type="text/css">
+			.reveal pre code { padding: 20px; margin: 40px auto; max-height: 500px; }
+			.reveal ul li { margin-bottom: 15px; }
+			.reveal h1 { font-size: 80px; }
+			.reveal h1 + h3 { }
+			.reveal h2 + h4 { margin-top: 40px; }
+
+			/* Slide-show specific */
+			.reveal h1 + article,
+			.reveal h3 + article { margin-top: 100px; }
+			.reveal article { position: relative; margin-top: 50px; min-height: 300px; }
+			.reveal article pre { margin: 0; width: 48%; position: absolute; top: 0; box-shadow: none; }
+			.reveal article pre code { margin: 0; }
+			.reveal pre:before { color: #333; font-family: "Open Sans", sans-serif; font-weight: bold; font-size: 24px; }
+			.reveal pre.cs:before { content: "CoffeeScript"; }
+			.reveal pre.js { position: absolute; top: 0px;  left: 50%; }
+			.reveal pre.js:before { content: "Javascript"; }
+			.reveal article.vertical pre { position: relative; left: auto; top: auto; width: 100%; }
+			.reveal article.vertical pre.js { margin-top: 25px; }
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+				<section>
+					<h1 style="font-size: 140px;">CoffeeScript</h1>
+					<h4 style="opacity: 0.5">how to decrease your daily {} count</h4>
+					<h3 style="margin-top: 35px;">Titus Stone</h3>
+				</section>
+
+				<section>
+					<h1 style="font-size: 110px;">automatic var</h1>
+
+					<article>
+						<pre class="cs"><code>x = 10</code></pre>
+						<pre class="js"><code>var x;
+x = 10</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1 style="font-size: 110px;">()'s are optional*</h1>
+
+					<article>
+						<pre class="cs"><code>x = add 1, 15</code></pre>
+						<pre class="js"><code>var x = add(1, 15);</code></pre>
+					</article>
+
+					<h5>* = except when there are no arguments</h5>
+				</section>
+
+				<section>
+					<h1 style="font-size: 110px;">string interpolation</h1>
+
+					<article class="vertical">
+						<pre class="cs"><code>msg = "Hello #{adjective} world"</code></pre>
+						<pre class="js"><code>var msg = "Hello "+ adjective +" world";</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>skinny functions <br/>+ automatic return</h1>
+					<article>
+						<pre class="cs"><code>add = (x,y) -> x + y</code></pre>
+						<pre class="js"><code>var add = function(x, y) {
+  return x + y;
+};</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>{}'s are optional:</h1>
+					<h3>block is implied by indentation</h3>
+					<article class="vertical">
+						<pre class="cs"><code>get_urls_from_sitemap = (domain) ->
+  xml = http_get("http://#{domain}/sitemap.xml")
+  parse_sitemap(xml)</code></pre>
+  
+						<pre class="js"><code>var getUrlsFromSitemap = function(domain) {
+  var xml = httpGet("http://"+ domain +"/sitemap.xml");
+  return parseSitemap(xml);
+};</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>Real World:</h1>
+					<h3>jasmine tests read way cleaner</h3>
+					<article>
+						<pre class="cs"><code>it "should be true", ->
+  expect(true).toBeTrue()
+</code></pre>
+						<pre class="js"><code>it("should be true", function(){
+  expect(true).toBeTrue();
+});</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>default values</h1>
+					<article class="vertical">
+						<pre class="cs"><code>call_search_api = (query, domain=".com") ->
+  # ...</code></pre>
+						<pre class="js"><code>var callSearchApi = function(query, domain) {
+  if (typeof domain === 'undefined') { domain = '.com'; }
+}</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>nice if/then/unless syntax*</h1>
+					<article>
+						<pre class="cs"><code>do_something() unless x
+if y
+  do_this()
+else
+  do_that()</code></pre>
+  
+						<pre class="js"><code>if (x) { doSomething(); }
+if (y) {
+  doThis();
+} else {
+  doThat();
+}</code></pre>
+					</article>
+
+					<h5>* = there is no `end` keyword.  This will mess you up all day long.</h5>
+				</section>
+
+				<section>
+					<h1 style="font-size: 110px;">class keyword</h1>
+
+					<article class="vertical">
+						<pre class="cs"><code>class Vehicle
+  move: (feet) ->
+    # ...</code></pre>
+						<pre class="js"><code>var Vehicle = function(){};
+Vehicle.prototype.move = function(feet) {
+  // ...
+};</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>@ references the instance</h1>
+
+					<article class="vertical">
+						<pre class="cs"><code>class Vehicle
+  move: (feet) ->
+    @open_throttle() if @is_started</code></pre>
+						<pre class="js"><code>var Vehicle = function(){};
+Vehicle.prototype.move = function(feet) {
+  if (this.isStarted) {
+    this.openThrottle();
+  }
+};</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>fat arrow maintains context</h1>
+					<article class="vertical">
+						<pre class="cs"><code>class Button
+  constructor: ->
+    @url = '/api/places'
+
+  get_places: (e) ->
+    $.getJson @url, (json, xhr) =>
+        console.log "#{@url} has been fetched and was #{json}"</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>...including on class methods</h1>
+					<article class="vertical">
+						<pre class="cs"><code>class Button
+  constructor: (options={}) ->
+    $('.button').click @on_click
+
+  on_click: (e) =>
+    if @options.whatever
+      # ...</pre></code>
+					</article>
+				</section>
+
+				<section>
+					<h1>automatic instance assignment</h1>
+					<article class="vertical">
+						<pre class="cs"><code>class Whatever
+  constructor: (url) ->
+    @url = url</code></pre>
+						<pre class="cs" style="margin-top:25px;"><code>class Whatever
+  constructor: (@url) -></code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1>inheritance works like a boss</h1>
+					<article class="vertical">
+						<pre class="cs"><code>class Vehicle
+  constructor: (options={}) ->
+  move: (feet) ->
+    @open_throttle() if @started
+
+class Car < Vehicle
+  move: (feet) ->
+    @release_brakes()
+    super()</code></pre>
+					</article>
+				</section>
+
+				<section>
+					<h1 style="font-size: 140px;">Part 2:</h1>
+					<h3 style="margin-top: 35px;">My almost framework-less approach to structured front-end code</h3>
+				</section>
+
+				<section>
+					<h1>Most UI code does the same thing:</h1>
+					<h4 style="margin-top: 35px;">Initialize:</h4>
+					<ul>
+						<li>take in some options (model)</li>
+						<li>find some DOM elements (view)</li>
+						<li>bind some events (view)</li>
+					</ul>
+
+					<h4>Lifecycle:</h4>
+					<ul>
+						<li>react to events (controller)</li>
+						<li>execute business logic (model)</li>
+						<li>update the UI (view)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>take in some options (model)</h1>
+					<pre><code>class NewsletterSubscribe
+  constructor: (@options={}) -></code></pre>
+				</section>
+
+				<section>
+					<h1>find some DOM elements (view)</h1>
+					<pre><code>constructor: (@options={}) ->
+  @init_elements()
+
+  init_elements: ->
+    @button = $(@options.button)
+    @email_input = $(@options.email_input)</code></pre>
+				</section>
+
+				<section>
+					<h1>bind some events (view)</h1>
+					<pre><code>constructor: (@options={}) ->
+  @bind_events()
+
+  bind_events: ->
+    @button.click @on_click</code></pre>
+				</section>
+
+				<section>
+					<h1>react to some events (controller) and execute business logic (model)</h1>
+					<pre><code>on_click: (e) =>
+  post_email @email_input.val()
+
+post_email: (email)
+  $.post @options.url, =>
+    @success_notification()</code></pre>
+				</section>
+
+				<section>
+					<h1>update the UI (view)</h1>
+					<pre><code>success_notification: ->
+  alert "You are now subscribed!"</code></pre>
+				</section>
+
+				<section>
+					<h1>Altogether, grouped</h1>
+					<pre style="font-size: 13px;"><code>class NewsletterSubscribe
+  
+  # -- setup -----------------
+
+  constructor: (@options={}) ->
+    @init_elements()
+    @bind_events()
+
+  init_elements: ->
+    @button = $(@options.button)
+    @email_input = $(@options.email_input)
+
+  bind_events: ->
+    @button.click @on_click
+
+  # -- logic ------------------
+
+  post_email: (email)
+    $.post @options.url
+
+  # -- view -------------------
+
+  success_notification: ->
+    alert "You are now subscribed!"
+
+  # -- events ------------------
+
+  on_click: (e) =>
+    post_email @email_input.val(), =>
+      @success_notification()</code></pre>
+				</section>
+
+				<section>
+					<h1>But half of that is boilerplate</h1>
+					<ul>
+						<li>we know we're usually going to initialize elements</li>
+						<li>we know we're usually going to bind events</li>
+						<li>we know that bound events will be fairly similar</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>What if we introduced a convention about how we describe elements?</h1>
+					<h4 style="margin-top: 35px;">data-is = this element IS this</h4>
+					<h4>data-does = this element DOES this</h4>
+				</section>
+
+				<section>
+					<h3>HTML</h3>
+					<pre><code>&lt;div class="newsletter-subscribe"&gt;
+  &lt;p&gt;Subscribe to our newsletter!&lt;/p&gt;
+  &lt;label&gt;Email&lt;/label&gt;
+  &lt;input type="text" data-is="email" placeholder="you@example.com" /&gt;
+  &lt;button data-does="subscribe"&gt;Subscribe&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+
+					<h3>Initialization</h3>
+					<pre><code>
+:javascript
+  new NewsletterSubscribe({
+    email: '[data-is="email"]',
+    subscribe: '[data-does="subscribe"]'
+  });
+</pre></code>
+				</section>
+
+				<section>
+					<h1>A common class could scan for these</h1>
+					<pre><code>class UiElement
+  constructor: (@options={}) ->
+    for key in @options
+      if typeof key === 'string'
+        and (key.indexOf('data-is') > -1
+        or key.indexOf('data-does') > -1)
+          @[key] = $(@options[key])
+    @init_elements() if typeof @init_elements === 'function'
+    @bind_events() if typeof @bind_events === 'function'</code></pre>
+				</section>
+
+				<section>
+					<h1>Our NewsletterSubscribe class gets shorter</h1>
+					<pre><code>class NewsletterSubscribe < UiElement
+  bind_events: ->
+    @button.click @on_click
+
+  post_email: (email)
+    $.post @options.url, =>
+      @success_notification()
+
+  success_notification: ->
+    alert "You are now subscribed!"
+
+  on_click: (e) => post_email @email.val()
+				</section>
+
+				
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme,
+				transition: Reveal.getQueryHash().transition || 'default',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

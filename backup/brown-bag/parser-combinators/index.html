@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Creating Your Own Languages (in Scala)</title>
+
+    <meta name="description" content="Lambda">
+    <meta name="author" content="Titus Stone">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/one-mozilla.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <style type="text/css">
+      #scala-denver { position: absolute; bottom: 15px; left: 15px; display: block; }
+      ul.same-bullets { width: 1000px; display: block; }
+    </style>
+  </head>
+
+  <body>
+    <img src="Scala-Denver-Micro.png" id="scala-denver" />
+
+    <div class="reveal">
+
+      <div class="slides">
+
+        <section>
+          <h1>Creating Your Own Languages</h1>
+          <h4 style="margin-top: 80px;">in Scala</h4>
+          <h3>Titus Stone</h3>
+        </section>
+
+        <section>
+          <h1>Part 1:</h1>
+          <h2>About Languages &amp; Parsing</h2>
+        </section>
+
+        <section>
+          <p>There are very few professions where the skills of the profession are the same skills to building tools for that profession</p>
+          <ul style="margin-top:30px;">
+            <li>Machinist</li>
+            <li>Programming</li>
+          </ul>
+        </section>
+
+        <section>
+          <blockquote>...the main reason we take the trouble to develop high-level languages is to get leverage, so that we can say (and more importantly, <strong>think</strong>) in 10 lines of a high-level language what would require 1000 lines of machine language.</blockquote>
+          <p style="margin-top:20px; display: inline-block;">-- Paul Graham, <em>Succinctness is Power</em></p>
+          <p style="font-size: 16px;">http://www.paulgraham.com/power.html</p>
+        </section>
+
+        <section>
+          <h3>We're often driven to think up our own languages in pursuit of something that allows us to reason about code in an easier way</h3>
+          <h1>But how?</h1>
+        </section>
+
+        <section>
+          <h2>"I'll just use regex"</h2>
+        </section>
+
+        <section>
+
+            <h3>Good Luck With That</h3>
+
+            <p><pre><code>{{for r in row}}
+  &lt;tr class="{{r.name}}"&gt;
+    {{for c in column}}
+        {{if c.isNumeric}}
+          &lt;td class="numeric"&gt;{{c}}&lt;/td&gt;
+        {{else}}
+          &lt;td&gt;{{c}}&lt;/td&gt;
+        {{end}}
+    {{end}}
+  &lt;/tr&gt;
+{{end}}</code></pre></p>
+
+            <p style="margin-top: 25px; display: inline-block;">
+              How do we know which <code>{{end}}</code> closes which <code>{{for}}</code>?
+            </p>
+        </section>
+
+        <section>
+          <h4>Designing a Language to Think In:</h4>
+          <h3>SMACSS as a Language == </h3>
+          <h1>Smack</h1>
+        </section>
+
+        <section>
+          <h4>in SMACSS...</h4>
+          <h2>Modules are re-usable UI components</h2>
+
+          <pre><code>/* the "bar-button" module */
+.m-bar-button {
+  ...
+}</code></pre>
+
+          <p style="margin-top: 20px; display: inline-block;">If we make modules a first-class citizen, we create a language that lets us think in terms of modular components instead of an upchuck of CSS smeared all over various files.</p>          
+        </section>
+
+        <section>
+          <h2>Language Rules:</h2>
+          <ul>
+            <li>Styles are defined within the scope of a module</li>
+            <li>Style are written in standard CSS</li>
+            <li>Modules can express a lineage that will be reflected in their rendered class names.</li>
+            <li>Any property values within a module can be referenced by it's location in the tree relative to the module.</li>
+            <li>Selectors within a module can only be a single expression (compound selectors are a code smell indicating that you probably need a child module).</li>
+          <ul>
+        </section>
+
+        <section>
+          <h2>Smack Lang Sample</h2>
+          <pre><code>@module title &gt;&gt; heading {
+  this {
+    font-size: 12px;
+  }
+
+  h1 {
+    font-size: @this.font-size * 2;
+  }
+
+  h2 {
+    font-size: @this.h1.font-size - 4;
+  }
+}</code></pre>
+        </section>
+
+        <section>
+          <h2>Output</h2>
+          <pre><code>.heading-title {
+  font-size: 12px;
+}
+
+.heading-title h1 {
+  font-size: 24px;
+}
+
+.heading-title {
+  font-size: 20px;
+}</code></pre>
+        </section>
+
+        <section>
+          <h2>What is a Scalable Approach?</h2>
+          <ol>
+            <li><strong>Parse</strong> -- Turn the blob of text into a tree structure</li>
+            <li><strong>Transform</strong> -- Turn the tree nodes into something meaningful</li>
+            <li><strong>Act</strong> -- Do something with the meaningful representation</li>
+          </ol>
+        </section>
+
+        <section>
+          <h1>Option #1:</h1>
+          <h3>Formal Language Specification: Backus–Naur Form (BNF) or
+          Extended Backus–Naur Form (EBNF)</h3>
+        </section>
+
+        <section>
+          <h2>Language descriptions can be fed to a parser generator.</h2>
+          <h4>The parser generator generates code for a given language, giving you a parser.  The parser will generate a syntax tree which can be <strong>transformed</strong> and <strong>acted</strong> on.</h4>          
+        </section>
+
+        <section>
+          <h2>EBNF Sampler (Battleship)</h2>
+          <pre><code>bomb location = alphabetic character, number ;
+number = "0" | "1" ... | "10" ;
+alphabetic character = "A" | "B" | "C" ... | "J" ;</code></pre>
+
+          <p><code>,</code> is a sequence -- a follows b</p>
+          <p><code>|</code> is alternation -- a or b could be here</p>
+        </section>
+
+        <section>
+          <h2>BNF/EBNF</h2>
+          <h3>Pros:</h3>
+          <ul class="same-bullets">
+            <li>Language agnostic / portable</li>
+            <li>Most performant</li>
+            <li>Allows others to study and reason about the language</li>
+            <li>Copy/paste BNF from other languages that inspired yours</li>
+          </ul>
+          <h3>Cons:</h3>
+          <ul class="same-bullets">
+            <li>Long and tedious language specs (ie. bad for just trying things out)</li>
+            <li>More difficult transformation step*</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Option #2:</h1>
+          <h2>Write a parser from scratch using your own parser combinators functions</h1>
+        </section>
+
+        <section>
+          <h2>From Scratch</h2>
+          <h3>Pros:</h3>
+          <ul class="same-bullets">
+            <li>Fun and interesting on a geeky computer science level</li>
+            <li>Most creative, allows really outside-the-box choices</li>
+            <li>Better opportunity for humane error messages</li>
+            <li>Complete control over everything</li>
+          </ul>
+          <h3>Cons:</h3>
+          <ul class="same-bullets">
+            <li>Likely the worst performance</li>
+            <li>Potentially large investment in boilerplate/setup</li>
+          </ul>
+
+          <p style="margin-top: 50px;"><strong>Real World Example: Scala compiler</strong></p>
+        </section>
+
+        <section>
+          <h1>Option #3:</h1>
+          <h2>Write a parser using a parser combinator library</h2>
+        </section>
+
+        <section>
+          <h2>Hybrid</h2>
+          <h2>Pros:</h2>
+          <ul class="same-bullets">
+            <li>Still rather fun and interesting</li>
+            <li>Enjoyable DSL</li>
+            <li>Extremely fast to build and use</li>
+            <li>Easier transformation step*</li>
+            <li>Decent performance</li>
+            <li>Easy to make changes</li>
+          </ul>
+          <h2>Cons:</h2>
+          <ul class="same-bullets">
+            <li>Language specific / not portable</li>
+            <li>Some control given up for convinience depending on the library</li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>Part 2:</h1>
+          <h2>Live Coding a CSS Preprocessor</h2>
+          <h4>Using Scala's Parser Combinator Library</h4>
+        </section>
+
+        <section>
+          <h2>Let's start simple...</h2>
+          <pre><code>@module breadcrumb {
+  div {
+    font-size: 12px;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+}</code></pre>
+        </section>
+
+        <section>
+          <h2>Pattern Matching:<br/>Exact Value</h2>
+          <pre><code>"foo" match {
+  case "foo" => "bar"
+  case _     => "nada"
+}</code></pre>
+          <h3>Roughly same as...</h3>
+          <pre><code>switch("foo") {
+  case "foo":
+    return "bar";
+    break;
+
+  default:
+    return "nada";
+    break;
+}</pre></code>
+        </section>
+
+        <section>
+          <h2>Pattern Matching:<br/>Type</h2>
+          <pre><code>val x: Any = 1      // x is actually an Int
+
+x match {
+  case s: String => s
+  case a         => a.toString
+}</code></pre>
+
+          <p>Variables declared in the case are scoped within the block that's executed for that case.</p>
+        </section>
+
+        <section>
+          <h2>Pattern Matching:<br/>Comparison</h2>
+          <pre><code>val age = 16
+
+age match {
+  case a if a > 65          => relax(p)
+  case 65                   => retire(p)
+  case a if a <= 2          => sleepAndPoop(p)
+  case a                    => work(p)
+}</code></pre>
+        </section>
+
+        <section>
+          <h2>Pattern Matching:<br/>Objects</h2>
+          <p>Types can be represented as <code>case class</code>'es</p>
+          <pre><code>case class Person(name: String, age: Int)</code></pre>
+
+          <p>Case classes can be pattern matched against their constructor</p>
+          <pre><code>Person("Titus", 31) match {
+  case p: Person("Titus", _)   => titusSlideshow(p.name)
+  case Person(name: String, _) => genericSlideshow(name)
+}</code></pre>
+        </section>
+
+        <section>
+          <h3>Note that this is possible,<br/>but it's ugly and verbose</h3>
+          <pre><code>Person("Titus", 31) match {
+  // meh
+  case p: Person if p.name == "Titus" => titusSlideshow(p.name)
+
+  // preferred
+  case p: Person("Titus", _)          => titusSlideshow(p.name)
+}</code></pre>
+
+          <h4>Thinking in Scala: Think patterns, not equality</h4>
+        </section>
+
+        <section>
+          <h3>Understanding the Tilde:</h3>
+          <p>Imagine a class named <code>~</code></p>
+          <pre><code>case class Sequence(left: Parser, right: Parser)
+case class ~(left: Parser, right: Parser)</pre></code>
+
+          <p>It could be pattern matched just like any other class</p>
+          <pre><code>val tilde = new ~(x, y)
+tilde match {
+  case ~(a, b)        => ...
+  case Sequence(a, b) => ...
+}</pre></code>
+        </section>
+
+        <section>
+          <h2>What exactly is this:<br/><code>"foo" ~ "bar"</code>?</h2>
+        </section>
+
+        <section>
+          <h3>Like Ruby, in Scala operators are simply methods on the left most object written in infix notation</h3>
+          <pre><code>// equivalent
+"foo" ~ "bar"
+"foo".~("bar")</code></pre>
+          <p>...but <code>String</code> doesn't have a <code>~</code> method</p>
+          <p>And even if it did how would it know to return <code>Parser[String]</code>?</p>
+        </section>
+
+        <section>
+          <h3>Within the parser library is something that looks like this:</h3>
+
+          <pre><code>implicit def stringToRichString(s: String) = new RichString(s)
+
+class RichString(left: String) {
+  def ~(right: String) =
+    new Parser[String](left) + new Parser[String](right)
+}
+</code></pre>
+        </section>
+
+        <section>
+          <ol>
+            <li>When Scala compiles* <code>"foo" ~ "bar"</code>, it first looks to see if <code>String</code> has a <code>~</code> method.</li>
+            <li>When that fails it looks in the current scope for any <code>~</code> method</li>
+            <li>It finds one on <code>RichString</code> but <code>"foo"</code> isn't of that type.</li>
+            <li>So it checks for an implicit method that will convert <code>String => RichString</code> and finds one.</li>
+            <li>It runs <code>"foo"</code> through <code>stringToRichString</code>, making it a <code>RichString</code> then calls the <code>~</code> function, resutling in a new <code>Parser[String]</code></li>
+          </ol>
+
+          <p style="margin-top:30px; font-size: 18px;">* = this whole process would be horribly unperformant in an interpreted language like Python or Ruby</p>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme,
+        transition: Reveal.getQueryHash().transition || 'default',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>

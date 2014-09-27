@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>A Random Selection of CSS 2.1 and CSS3 Awesomesauce</title>
+
+		<meta name="description" content="A Simple Presentation on CSS">
+		<meta name="author" content="Titus Stone">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		<style type="text/css">
+			.reveal pre code { padding: 20px; margin: 40px auto; }
+			.reveal ul li { margin-bottom: 25px; }
+			.reveal h2 + h4 { margin-top: 40px; }
+
+			/* Slide-show specific */
+			#before-box .error { color: red; position: relative; }
+			#before-box .error:before { content: 'x'; background-color: red; color: #fff;
+  				border-radius: 20px; height: 40px; width: 40px; display: block; font-family: 'Trebuchet MS', Helvetica;
+  				text-align: center; line-height: 35px; position: absolute; top: 5px; left: -45px; }
+
+			#title-box *[data-title] { position: relative; cursor: pointer; }
+			#title-box *[data-title]:after { position: absolute; content: attr(data-title); display: block;
+				right: -125px; width: 200px; top: -20px; height: 50px; transition: all 0.35s ease-out;
+				background-color: #E9EDB7; padding: 20px; border-radius: 10px; opacity: 0;
+				text-align: center; font-size: 16px; line-height: 16px; -webkit-transform: scale(0.25); 
+				box-shadow: 0 3px 15px rgba(0,0,0,0.5); -webkit-filter: blur(5px); }
+			#title-box *[data-title]:hover:after { opacity: 1; -webkit-transform: scale(1); -webkit-filter: blur(0); right: -250px; }
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+				<section>
+					<h1 style="font-size: 170px;">Selectors of CSS 2.1</h1>
+					<h2 style="font-weight: bold; color: steelblue;">IE8+</h2>
+					<h4 style="opacity: 0.5">(stuff you can actually use today)</h4>
+					<h3 style="margin-top: 35px;">Titus Stone</h3>
+				</section>
+
+				<section>
+					<h1 style="font-size:200px">*</h1>
+					<h3>Wildcard</h3>
+					<pre><code>[parent] * { rule }</code></pre>
+					<p>Style any tag within the given parent.</p>
+				</section>
+
+				<section>
+					<h2>* Example</h2>
+						<pre><code data-trim contenteditable>
+							h2 * { color: steelblue; }
+						</code></pre>
+						
+						<pre><code data-trim contenteditable>
+&lt;h2&gt;
+  &lt;span&gt;   # apply
+    &lt;a&gt;    # apply
+  &lt;a&gt;      # apply
+					</code></pre>
+				</section>
+
+				<section>
+					<h1 style="font-size:200px">~</h1>
+					<h3>General Sibling</h3>
+					<pre><code>[parent] selector1 ~ selector2 { rule }</code></pre>
+					<p>Style selector2 if any sibling matching selector1 is found on the same-level.</p>
+				</section>
+
+				<section>
+					<h2>~ Example</h2>
+						<pre><code data-trim contenteditable>
+							div h2 ~ p { margin-top: 10px; }
+						</code></pre>
+						
+						<pre><code data-trim contenteditable>
+&lt;div&gt;
+  &lt;p&gt;	    # not apply
+  &lt;h2&gt;      # this element's existance trigger the rule
+  &lt;p&gt;	    # apply
+  &lt;p&gt;	    # apply
+  &lt;div&gt;
+    &lt;p&gt;	    # not apply
+
+&lt;div&gt;
+  &lt;p&gt;	    # not apply
+					</code></pre>
+				</section>
+
+				<section>
+					<h1 style="font-size:200px">+</h1>
+					<h3>Adjacent Sibling</h3>
+					<pre><code>[parent] selector1 + selector2 { rule }</code></pre>
+					<p>Style selector2 if it immediately follows selector1 in a same-level sibling relationship</p>
+				</section>
+
+				<section>
+					<h2>+ Example</h2>
+
+					<pre><code data-trim contenteditable>
+						div h2 + p { margin-top: 10px; }
+					</code></pre>
+					
+					<pre><code data-trim contenteditable>
+&lt;div&gt;
+  &lt;p&gt;	    # not apply
+  &lt;h2&gt;      # this element's existance trigger the rule
+  &lt;p&gt;	    # apply
+  &lt;p&gt;	    # not apply
+  &lt;div&gt;
+    &lt;p&gt;     # not apply
+
+&lt;div&gt;
+  &lt;p&gt;	    # not apply
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>~ / + Notes</h2>
+					<ul>
+						<li>Any valid selector works (ie. <code>#id + .class</code>)</li>
+						<li>The parent is specified only on first selector.</li>
+						<li>Only matches tags that follow, never before.</li>
+						<li>Selector2 can be scoped to only apply to children of a same-level sibling (upcoming example).</li>
+						<li>Does not count if selector2 happens to also meet selector1 criteria.</li>
+						<li>Can be chained (ie. <code>div ~ p + a</code>)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #1: A right-column is sometimes there and sometimes not.</h4>
+					<pre><code>
+.main { width: 960px; }
+aside ~ .main { width: 550px; }
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #2: Alter layout if the page is branded.</h4>
+					<pre><code>
+.main .brand-details ~ .collection .title { font-weight: bold; }
+					</code></pre>
+
+					<p>Read: Whenever the class "branding-details" within the class "main" is on the page, set the font-weight of class "tile" within parent "collection" (which is on the same sibling level as "branding-details") to bold.</p>
+				</section>
+
+				<section>
+<h2>Real World Use Case</h2>
+					<h4>Scenario #3: This slide show!</h4>
+					<pre><code>
+h2 + h4 { margin-top: 40px; }
+					</code></pre>					
+				</section>
+
+				<section>
+					<h1 style="font-size:200px">&gt;</h1>
+					<h3>Direct Decendant</h3>
+					<pre><code>selector1 > selector2 { rule }</code></pre>
+					<p>Style selector2 only when it appears as a child directly under selector1.</p>
+				</section>
+
+				<section>
+					<h2>+ Example</h2>
+
+					<pre><code data-trim contenteditable>
+						p > a { font-weight: bold; }
+					</code></pre>
+					
+					<pre><code data-trim contenteditable>
+&lt;div&gt;
+  &lt;p&gt;
+    &lt;a&gt;     # apply
+  &lt;p&gt;
+    &lt;span&gt;
+      &lt;a&gt;   # not apply
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #1: Setup all first-level tags within a sidebar to always fill 100% width.</h4>
+					<pre><code>
+aside > * { display: block; width: 100%; }
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #2: Create menus where sub-menus look different</h4>
+					<pre><code>
+ul { list-style-type: none; }
+ul > li { display: inline-block; width: 150px; font-weight: bold; }
+ul li li { color: #BADA55; }
+					</code></pre>
+
+					<p>Advantage: The second-level <code>&lt;li&gt;</code> tags don't need to have their styles all re-written.</p>
+				</section>
+
+				<section>
+					<h1>:before &amp; :after</h1>
+					<h3>Tag-less Elements</h3>
+					<pre><code>
+selector1:before { rule }
+selector1:after { rule }
+					</code></pre>
+					<p>Create a new DOM element, that appears either before or after, which can be styled independently of selector1.</p>
+				</section>
+
+				<section>
+					<h2>Live Example</h2>
+					<pre><code>&lt;span class="error"&gt;Incorrect Password&lt;/span&gt;</code></pre>
+					<pre><code>
+.error { color: red; position: relative; }
+.error:before { content: 'x'; position: absolute; top: 5px;
+	left: -45px; background-color: red; color: #fff;
+	border-radius: 20px; height: 40px; width: 40px; }
+					</code></pre>
+
+					<div id="before-box">
+						<span class="error">Incorrect Password</span>
+					</div>
+
+				</section>
+
+				<section>
+					<h2>:before / :after Notes</h2>
+					<ul>
+						<li>The <code>content</code> property is mandatory.</li>
+						<li>Cannot receive user events (click, hover, etc.).</li>
+						<li>Cannot be animated/transitioned in most browsers.</li>
+						<li>Cannot be selected directly in chrome dev tools.</li>
+						<li>Pseudo-tags cannot have pseudo-tags of their own (ie. a:before:before).</li>
+						<li>Difficult to debug.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #1: Required indicator for <code>&lt;form&gt;</code></h4>
+					<pre><code>
+input.required:before { content: '*'; color: red; position: relative;
+			left: -10px; }
+					</code></pre>
+
+					<p style="font-size: 20px;">Side Note: in CSS3 this would simply be <code>input:required:before</code>.</p>
+				</section>
+
+				<section>
+					<h1 style="font-size:200px">[ ]</h1>
+					<h3>Attributes</h3>
+					<pre><code>[attribute] { rule } // Match any tag with the attribute
+selector1[attribute] { rule } // Match selector1 with the attribute
+[attribute="value"] { rule } // Attribute equals value
+[attribute^="value"] { rule } // Attribute starts with value
+[attribute*="value"] { rule } // Attribute contains value
+[attribute$="value"] { rule } // Attribute ends with value</code></pre>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #1: Improve UX by adding a "opens in a new tab" icon.</h4>
+					<pre><code>
+a[target="_blank"]:after { content: ""; height: 20px; width: 30px;
+	background: transparent url(new-tab.png) no-repeat;
+	display: block; margin: auto 5px; }
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Real World Use Case</h2>
+					<h4>Scenario #2: Javascript-less tool tips.</h4>
+					<pre><code>
+&lt;span data-title="Some Definition"&gt;Deuce Definition&lt;/span&gt;
+					</code></pre>
+					<pre><code>
+*[data-title] { position: relative; cursor: pointer; }
+*[data-title]:hover:after { position: absolute;
+	content: attr(data-title); display: block; right: -250px;
+	width: 200px; top: -25px; background-color: #E9EDB7; }
+					</code></pre>
+
+					<div id="title-box">
+						<span data-title="A thing representing, or represented by, the number two, in particular.">Deuce Definition</span>
+					</div>
+				</section>
+
+				<section>
+					<h2>Further Learning: MDN</h2>
+					<h3>Mozilla Developer Network</h3>
+					<p>http://developer.mozilla.org</p>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme,
+				transition: Reveal.getQueryHash().transition || 'default',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

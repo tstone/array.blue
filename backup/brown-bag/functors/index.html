@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Monoids, Functors, and Other Dark Horses of Functional Programming</title>
+
+    <meta name="description" content="Lambda">
+    <meta name="author" content="Titus Stone">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/one-mozilla.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <style type="text/css">
+      #scala-denver { position: absolute; bottom: 15px; left: 15px; display: block; }
+      ul.same-bullets { width: 1000px; display: block; }
+    </style>
+  </head>
+
+  <body>
+    <img src="Scala-Denver-Micro.png" id="scala-denver" />
+
+    <div class="reveal">
+
+      <div class="slides">
+
+        <section>
+          <h2>Monoids, Functors, and Other Dark Horses of Functional Programming</h2>
+          <h4 style="margin-top: 80px;">in Scala (mostly)</h4>
+          <h3>Titus Stone</h3>
+        </section>
+
+        <section>
+          <h2>Functor</h2>
+          <hr/>
+          <h3>A functor is a type of mapping between categories. Functors can be thought of as homomorphisms between categories [where] a homomorphism is a structure-preserving map between two algebraic structures.</h3>
+          <h4>Wikipedia</h4>
+        </section>
+
+        <section>
+          <img src="functional.png" />
+          <hr/>
+          <h3>Functional programming combines the flexibility and power of abstract mathematics with the intuitive clarity of abstract mathematics.</h3>
+          <h4>XKCD</h4>
+        </section>
+
+        <section>
+          <h1>Part 1:</h1>
+          <h2>Algebraic Data Types and Algebraic Structures</h2>
+        </section>
+
+        <section>
+          <h2>What is a Type?</h2>
+          <hr/>
+          <h4>Statically <strong>Typed</strong> Languages</h4>
+          <h4>Dynamically <strong>Typed</strong> Languages</h4>
+        </section>
+
+        <section>
+          <h2>1.) A strategy for memory allocation</h2>
+          <h4>Primitives</h4>
+          <hr/>
+          <h3>Boolean: 1 bit</h3>
+        </section>
+
+        <section>
+          <h2>2.) A template of associated behavior and data</h2>
+          <h4>Classes</h4>
+          <hr/>
+          <p><pre><code>class Foo {
+  val name: String = "foo"
+  def print = println(s"I am $name")
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h2>3.) A way to interact with something</h2>
+          <h4>Interfaces</h4>
+          <hr/>
+          <p><pre><code>trait Vendor {
+  val ids: Set[Int]
+  val name: String
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h2>The point:</h2>
+          <h3>When we say "type", we actually are talking about a lot of concepts not just <code>String</code>'s and <code>Int</code>'s</h3>
+        </section>
+
+        <section>
+          <h2>Q: Is it possible to have types of types</h2>
+          <h4>(which in a very meta way are themselves types)</h4>
+        </section>
+
+        <section>
+          <h2><code>int</code>, <code>long</code>, <code>double</code>, <code>float</code></h2>
+          <hr/>
+          <h2>aka "Numeric"</h2>
+        </section>
+
+        <section>
+          <h2>How would we go about describing "Numeric"?<h2>
+          <hr/>
+          <h4>How do we describe a type of types?</h4>
+        </section>
+
+        <section>
+          <h1>A:</h1>
+          <h2>All of the types which can do X operations where those operations follow Y rules<h2>
+          <hr/>
+          <ul style="font-size:44px;">
+            <li>Operations</li>
+            <li>Rules</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Example</h2>
+          <hr/>
+          <h3><strong>Operation:</strong> Addition</h3>
+          <h3><strong>Rule:</strong> Distributive Property</h3>
+          <p><pre><code>a + b == b + a</code></pre></p>
+        </section>
+
+        <section>
+          <h2>Example</h2>
+          <p><pre><code>// Type of types
+trait Numeric[A] {
+  // Operation:
+  def add(x: A, y: A): A
+}
+
+// Rule:
+numeric.add(5, 1) mustEqual numeric.add(1, 5)</code></pre></p>
+          <hr/>
+          <h3>Q: What makes a type <code>Numeric</code>?</h3>
+          <h4>A: Any type <code>A</code>, where <code>A</code> is able to be added<br/>such that x + y == y + x</h4>
+        </section>
+
+        <section>
+          <h2>Implementation</h2>
+          <p><pre><code>// Valid
+val Int = new Numeric[Int] {
+  def add(x: Int, y: Int) = x + y
+}
+
+val Double = new Numeric[Double] {
+  def add(x: Double, y: Double) = x + y
+}
+
+// Not Valid
+val String = new Numeric[String] {
+  def add(x: String, y: String) = x + y
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h3><code>Numeric</code> is a way to categorize type:</h3>
+          <h3>Types where <strong>this</strong> is true</h3>
+          <hr/>
+          <h3>It has defined defining a set of types (int, long, double, float)</h3>
+        </section>
+
+        <section>
+          <h2>Why is this valuable?</h2>
+        </section>
+
+        <section>
+          <h2>Another Example</h2>
+          <hr/>
+          <h3>Append</h3>
+          <h4>Given <code>a</code> and <code>b</code>, return <code>a</code> appended to <code>b</code></h4>
+          <h4>Rule: Associative property</h4>
+          <h4>(a Append b) Append c == a Append (b Append c)</h4>
+          <hr/>
+          <h3>Identity</h3>
+          <h4>Return the default/empty/zero value for the type</h4>
+          <h4>Rule: Identity Append a == a Append Identity == a</h4>
+          <hr/>
+          <p><pre><code>trait Example[A] {
+  def append(x: A, y: A): A
+  def identity: A
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h2>Monoid</h2>
+          <p><pre><code>trait Monoid[A] {
+  def mappend(x: A, y: A): A
+  def mzero: A
+}</code></pre></p>
+
+          <h2 style="margin-top:50px;">Implementations</h2>
+          <p><pre><code>val String = new Monoid[String] {
+  def mappend(x: String, y: String) = x.append(y)
+  def mzero = ""
+}
+
+val Int = new Monoid[Int] {
+  def mappend(x: Int, y: Int) = x + y
+  def mzero = 0
+}</p></pre></code>
+        </section>
+
+        <section>
+          <h2>Algebraic Structure</h2>
+          <h4>An algebraic structure generally refers to a set&lt;1&gt; with one or more finitary operations&lt;2&gt; defined on it [where] a finitary operation is an operation that takes a finite number of input values&lt;3&gt; to produce an output&lt;4&gt;...<h4>
+          <h4>Wikipedia</h4>
+          <hr/>
+          <h2>In other words...</h2>
+          <p><pre><code>trait Foo[A]&lt;1&gt; {
+  def op&lt;2&gt;(arg: A&lt;3&gt;): A&lt;4&gt;
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h2>When would we ever use this?</h2>
+        </section>
+
+        <section>
+          <h1>Every day</h1>
+          <h2>Array</h2>
+        </section>
+
+        <section>
+          <h3>We typically think of an array (<code>Seq</code>) as a type -- which it is -- but it's really a type of types, an algebraic structure</h3>
+          <hr/>
+          <h3>Array is describing a set: all types which adhere to the interface exposed by <code>Seq</code></h3>
+          <hr/>
+          <h4>It just happens to be the set of types Array is describing is every type, including itself</h4>
+        </section>
+
+        <section>
+          <h3><strong>Questions</strong> about algebraic data types and monoids?</h3>
+        </section>
+
+        <section>
+          <h1>Part 2:</h1>
+          <h2>Functors</h2>
+        </section>
+
+        <section>
+          <h3>Recall what we're talking about:</h3>
+          <hr/>
+          <h2>Describing a set of types through operations and rules</h2>
+        </section>
+
+        <section>
+          <h2>Functor</h2>
+          <hr/>
+          <h3>A functor is a type of mapping between categories. Functors can be thought of as homomorphisms between categories [where] a homomorphism is a structure-preserving map between two algebraic structures.</h3>
+          <h4>Wikipedia</h4>
+        </section>
+
+        <section>
+          <h3>"a map between two algebraic structures"</h3>
+          <hr/>
+          <p><pre><code>trait Functor[A] {
+  def map(f: A => B): Functor[B]
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h3>1.) Given a function that takes <code>A</code> and returns <code>B</code></h3>
+          <h3>2.) Return a new <code>Functor</code> of type <code>B</code></h3>
+          <hr/>
+          <p><pre><code>trait Functor[A] {
+  def map(f: A => B&lt;1&gt;): Functor[B]&lt;2&gt;
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h3>Functors in Javascript</h3>
+          <p><pre><code>var Foo = function(value) {
+  this.value = value;
+}
+
+Foo.prototype.map = function(f) { // where f is A => B
+  return new Foo(f(value));
+};</code></pre></p>
+        </section>
+
+        <section>
+          <h3><code>Seq</code> is a Functor</h3>
+          <p><pre><code>val s: Seq[Int] = Seq(1, 2, 3)
+val s2 = s.map(_.toString)
+
+// s2.type == Seq[String]</code></pre></p>
+        </section>
+
+        <section>
+          <h3><code>Array</code> is a Functor</h3>
+          <p><pre><code>var s = [1, 2, 3];
+var s2 = s.map(function(x) { return x.toString(); });
+
+// ["1", "2", "3"]</code></pre></p>
+        </section>
+
+        <section>
+          <h3><code>Option</code> is a Functor</h3>
+          <p><pre><code>val o: Option[Int] = Some(10)
+val o2 = o.map(_.toString)
+
+// o2.type == Option[String]</code></pre></p>
+        </section>
+
+        <section>
+          <h3><code>Future</code> is a Functor</h3>
+          <p><pre><code>val f: Future[PoiLike] = PlaceService.getPlace(1234)
+val f2 = s.map(_.mqId)
+
+// f2.type == Future[Int]</code></pre></p>
+        </section>
+
+        <section>
+          <h3>Promises are "mostly" Functors</h3>
+          <p><pre><code>var p = $.get("/api/place/1234");
+var p2 = p.pipe(function(json) {
+  return json.name;
+});</code></pre></p>
+          <h4><code>Promise.pipe</code> == <code>Functor.map</code></h4>
+        </section>
+
+        <section>
+          <h1>Part 3:</h1>
+          <h2>Using Functors</h2>
+        </section>
+
+        <section>
+          <h3><code>fmap</code> always returns a new <code>Functor</code> of <code>B</code>, however the behavior of when fmap "applies" can varry.</h3>
+        </section>
+  
+        <section>
+          <h2>Option</h2>
+          <p><pre><code>sealed trait Option[A] extends Functor[A]
+
+case class Some[A](protected val value: A) extends Option[A] {
+  val map(f: A => B) = Some(f(value))
+}
+
+case object None[A] extends Option[A] {
+  val map(f: A => B) = this
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h2>Option</h2>
+          <p><pre><code>val o: Option[String] = Some("hello")
+o.map(_.toUpperCase)
+
+// Some("HELLO")
+
+val o2: Option[String] = None
+o2.map(_.toUpperCase)
+
+// None</code></pre></p>
+         </section>
+
+         <section>
+          <h3>What happens when we get a <code>Functor[Functor[A]]</code>?</h3>
+          <p><pre><code>trait AddressLike(
+  country: String,
+  region: Option[String] = None,
+  locality: Option[String] = None,
+  ...
+)</code></pre></p>
+
+  <p><pre><code>val cityAndState = address.locality.map { city =>
+  address.region.map { state =>
+    city + ", " + state
+  }
+}</code></pre></p>
+          
+          <h3 style="margin-top:50px;">Q: What is the type of <code>cityAndState</code>?</h3>
+         </section>
+
+         <section>
+          <h3>A: <code>Option[Option[String]]</code></h3>
+  <p><pre><code>val cityAndState = address.locality.map { city =>
+  address.region.map { state =>
+    city + ", " + state
+  }
+}</code></pre></p>
+          
+         </section>
+
+         <section>
+          <h2>flatten</h2>
+  <p><pre><code>val cs1 = address.locality.map { city =>
+  address.region.map { state =>
+    city + ", " + state
+  }
+}
+val cs2 = cs1.flatten
+
+// cs1.type == Option[Option[String]]
+// cs2.type == Option[String]</code></pre></p>
+         </section>
+
+         <section>
+          <h2>flatMap*</h2>
+          <h4><code>flatMap</code> is a shortcut for map+map+flatten</h4>
+          <p><pre><code>val cs1 = address.locality.flatMap { city =>
+  address.region.map { state =>
+    city + ", " + state
+  }
+}
+// cs1.type == Option[String]</code></pre></p>
+          <h4>A: <code>Option[Option[String]]</code></h4>
+          <h5>* = <code>flatMap</code> is technically part of a Monad which itself is a Functor</h5>
+         </section>
+
+         <section>
+          <h3><code>for/yield</code> is another way of writing chained <code>flatMap</code>'s</h3>
+          <h4>Given</h4>
+          <p><pre><code>val o1 = Some("a")
+val o2 = Some("b")
+val o3 = Some("c")</code></pre></p>
+          <h4>These are equivalent:</h4>
+          <p><pre><code>o1.flatMap { a =>
+  o2.flatMap { b =>
+    o3.map { c =>
+      a + b + c
+    }
+  }
+}</code></pre></p>
+<p><pre><code>for {
+  a <- o1
+  b <- o2
+  c <- o3
+} yield a + b + c</code></pre></p>
+  </section>
+
+         <section>
+          <h3><code>flatten</code> and <code>flatMap</code> are available on all Functors in Scala</h3>
+         </section>
+
+         <section>
+          <h2>Future</h2>
+          <h4><code>map</code> applies the given function <code>f</code> returning not the result of <code>f</code>, but a new <code>Future</code> such that when the value eventually resolves, <code>f</code> will be applied to it</h4>
+          <hr/>
+          <p><pre><code>class PlaceController extends Controller {
+  def place(id: String) = Action.async {
+    val futurePlace: Future[PlaceLike] = PlaceService.getPlace(id)
+    futurePlace.map { place =>
+      Ok(views.html.place(place))
+    }
+  }
+}</code></pre></p>
+         </section>
+
+         <section>
+          <h4>Q: What is the return type of<br/><code>futurePlace.map { place => Ok(views.html.place(place) ...</code>?</h4>
+          <hr/>
+          <h3>A: Future[Html]</h3>
+         </section>
+
+         <section>
+          <h3>So what is <code>onSuccess</code> and <code>onFailure</code>?</h3>
+          <p><pre><code>class Future[U] {
+  def onSuccess[U](pf: PartialFunction[T, U]): Unit
+  def onFailure[U](pf: PartialFunction[T, U]): Unit
+}</code></pre></p>
+         </section>
+
+         <section>
+          <h3>The return type is the giveaway, <code>Unit</code></h3>
+          <hr/>
+          <p><code>onSuccess</code> and <code>onFailure</code> <em>mutate</em> the <code>Future</code>, providing it a partial function that will be called when the future resolves.</p>
+          <hr/>
+          <p>They do <strong>not</strong> return a new <code>Future</code>.<br/>They are not Functor-like.</p>
+         </section>
+
+         <section>
+          <h3>If <code>map</code> only applies to when the future succeeds, how do we get back a new Functor when it fails?</h3>
+          <h2><code>recover</code></h2>
+         </section>
+
+         <section>
+          <h3>RecentlyViewedController</h3>
+          <p><pre><code>def get: Action[AnyContent] = Action.async { request =>
+  val p = Promise[SimpleResult]()
+  val f = fetchUserState(request.cookies)
+  f map {
+    ...
+  }
+
+  f onFailure {
+    case e => Logger error("Recently viewed: " + e.getMessage)
+  }
+
+  f recover {
+    case _ => p success Ok
+  }
+
+  p future
+}</code></pre></p>
+         </section>
+
+         <section>
+          <h3>RecentlyViewedController</h3>
+          <p><pre><code>def get: Action[AnyContent] = Action.async { request =>
+  fetchUserState(request.cookies)
+    .map { ... }
+    .recover { case e =>
+      Logger.error("Recently viewed: " + e.getMessage)
+      Ok
+    }
+}</code></pre></p>
+         </section>
+
+        <section>
+          <h3><strong>Questions</strong> about using functors?</h3>
+        </section>
+
+        <section>
+          <h1>Part 4:</h1>
+          <h2>Designing With Functors</h2>
+        </section>
+
+        <section>
+          <h3>Always calling <code>.getOrElse</code> on <code>Option</code>'s is stupid</h3>
+        </section>
+
+        <section>
+          <h3>Solution: Use a monoid to get the identity value in cases of <code>None</code></h3>
+          <p><pre><code>implicit object StringMonoid extends Monoid[String] {
+  def mappend(x: String, y: String) = x + y
+  def mzero = ""
+}
+
+implicit def safeValue[A](opt: Option[A])(implicit md: Monoid[A]): A =
+  opt.getOrElse(md.mzero)
+
+
+val some: Option[String] = Some("asdf")
+val none: Option[String] = None
+
+println(some.toUpperCase + none.toUpperCase)
+> "ASDF"
+</code></pre></p>
+        </section>
+
+        <section>
+          <h3>Another Problem: Optionally add things to a <code>Seq</code> based on a conditional.</h3>
+        </section>
+
+        <section>
+          <h3>This is ugly...</h3>
+          <p><pre><code>val s = Seq.empty
+if (cond1) s = s ++ Seq(value1) else s
+if (cond2) s = s ++ Seq(value1) else s
+if (cond3) s = s ++ Seq(value1) else s</code></pre></p>
+        </section>
+
+        <section>
+          <h3 style="margin-top:50px;">We <em>could</em> use an implicit class...</h3>
+          <p><pre><code>implicit class SeqOps[A](s: Seq[A]) {
+  def when(cond: => Boolean)(value: A) =
+    if(cond) s ++ Seq(value) else s
+
+  def unless(cond: => Boolean)(value: A) =
+    when(!cond)(value)
+
+  def always(value: A) = when(true)(value)
+}</code></pre></p>
+          <h4>This would allow...</h4>
+          <p><pre><code>val widgets = Seq.empty
+  .unless(place.isInstanceOf[BizlocHotel]) { BookingWidget(...) }
+  .when(place.isInstanceOf[PoiLike])       { CategoryWidget(...) }
+  .when(place.isInstanceOf[AirportLike])   { DelaysWidget(...) }
+  .always                                  { RecentlyViewedWidget(...) }</code></pre></p>
+        </section>
+
+        <section>
+          <h3>There is a Monoid in there</h3>
+          <hr/>
+          <h4><code>s ++ Seq(value)</code> is really Monoid Append</h4>
+          <h4><code>Seq.empty</code> is really Monoid Identity</h4>
+        </section>
+
+        <section>
+          <h3>Let's apply our logic to a value that has a Monoid</h3>
+          <p><pre><code>implicit class MonoidOps[A](origin: A) {
+  def when(cond: => Boolean)(value: A)(implicit md: Monoid[A]) =
+    if(cond) md.mappend(origin, value) else origin
+
+  def unless(cond: => Boolean)(value: A)(implicit md: Monoid[A]) =
+    when(!cond)(value)
+
+  def always(value: A)(implicit md: Monoid[A]) =
+    when(true)(value)
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h3>What did we gain?</h3>
+          <h4>Our functionality is now available on anything that implements Monoid</h4>
+          <p><pre><code>def cityName(city: LocalityLike) = 
+  city.locality
+    .when(city.country == "US") { city.region }</code></pre></p>
+        </section>
+
+        <section>
+          <h3>We could take this really far and make a conversion from <code>String</code></h3>
+          <p><pre><code>trait FromString[A] {
+  def fromString(value: String): A
+}</code></pre></p>
+        </section>
+
+        <section>
+          <h3>And how things are off the hook</h3>
+          <p><pre><code>def cityName[A](city: LocalityLike)(implicit md: Monoid[A], fs: FromString[A]) = 
+  md.mzero
+    .always(fs.fromString(city.locality))
+    .when(city.country == "US") { fs.fromString(city.region) }</code></pre></p>
+
+        <h4>Which means we can do...</h4>
+        <p><pre><code>cityName[String](place)
+// Or
+cityName[Html](place)
+// Or event
+cityName[Seq[String]](place)</p></pre></code>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme,
+        transition: Reveal.getQueryHash().transition || 'default',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
+
