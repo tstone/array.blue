@@ -7,6 +7,7 @@ gem "middleman-blog", "~> 3.5.3"
 gem "middleman-syntax"
 gem "middleman-deploy", "~> 0.3.0"
 gem "middleman-minify-html"
+gem "middleman-ogp"
 
 gem "nokogiri"
 gem "redcarpet"

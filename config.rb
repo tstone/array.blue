@@ -148,3 +148,12 @@ activate :minify_html do |html|
   html.preserve_line_breaks       = false  # Preserve line breaks
   html.simple_boolean_attributes  = true   # Use simple boolean attributes
 end
+
+
+# --- Open Graph ---
+
+activate :ogp do |ogp|
+  ogp.namespaces = { og: data.ogp.og }
+  ogp.base_url = "http://array.blue/"
+  ogp.blog = true
+end
