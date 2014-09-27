@@ -9,6 +9,7 @@ gem "middleman-deploy", "~> 0.3.0"
 gem "middleman-minify-html"
 gem "middleman-ogp"
 gem "middleman-search_engine_sitemap"
+gem "middleman-blog-similar"
 
 gem "nokogiri"
 gem "redcarpet"

@@ -42,6 +42,7 @@ GEM
       sass (>= 3.2, < 3.5)
     erubis (2.7.0)
     execjs (2.2.1)
+    fast-stemmer (1.0.2)
     ffi (1.9.3)
     haml (4.0.5)
       tilt
@@ -72,6 +73,10 @@ GEM
       addressable (~> 2.3.5)
       middleman-core (~> 3.2)
       tzinfo (>= 0.3.0)
+    middleman-blog-similar (1.1.1)
+      fast-stemmer (~> 1.0.2)
+      middleman-blog (~> 3.5)
+      middleman-core (~> 3.2)
     middleman-core (3.3.6)
       activesupport (~> 4.1.0)
       bundler (~> 1.1)
@@ -165,6 +170,7 @@ DEPENDENCIES
   builder (~> 3.0)
   middleman (~> 3.3.6)
   middleman-blog (~> 3.5.3)
+  middleman-blog-similar
   middleman-deploy (~> 0.3.0)
   middleman-minify-html
   middleman-ogp

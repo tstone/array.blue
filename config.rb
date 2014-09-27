@@ -2,7 +2,7 @@
 # Blog settings
 ###
 
-# Time.zone = "UTC"
+Time.zone = "MST"
 
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true
@@ -49,7 +49,7 @@ page "/stuff/taig-calc.html", :layout => false
 # activate :automatic_image_sizes
 
 # Reload the browser automatically whenever files change
-# activate :livereload
+activate :livereload
 
 # Methods defined in the helpers block are available in templates
 # helpers do
@@ -65,13 +65,8 @@ set :url_root, "http://array.blue"
 
 # Build-specific configuration
 configure :build do
-  # For example, change the Compass output style for deployment
   activate :minify_css
-
-  # Minify Javascript on build
   activate :minify_javascript
-
-  # Enable cache buster
   activate :asset_hash
 
   # Use relative URLs
@@ -80,6 +75,8 @@ configure :build do
   # Or use a different image path
   # set :http_prefix, "/Content/images/"
 end
+
+
 
 # ============================================================
 #  PLUGINS
@@ -169,3 +166,8 @@ end
 
 activate :search_engine_sitemap, default_priority: 0.5,
                                  default_change_frequency: "monthly"
+
+
+# --- Related Pages ---
+
+# activate :similar, :algorithm => :"word_frequency/mecab"
