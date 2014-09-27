@@ -23,18 +23,17 @@ header {
   background-color: #23ceda;
 }
 
-header.page h1 {
-  position: relative;
-  left: 50px;
-  font-weight: 400;
-  color: #fff;
-  font-size: 103px;
+footer {
+  background-color: #eaeaea;
+  padding-top: 10px;
+  text-align: center;
+  line-height: 75px;
+}
+
+footer a,
+footer span {
   display: inline-block;
-  position: absolute;
-  letter-spacing: -10px;
-  padding: 0 25px;
-  /* background-color: rgba(34, 181, 210, 0.25); */
-  background-color: rgba(34, 212, 99, 0.25);
+  margin: 0 20px;
 }
 
 code {
@@ -88,6 +87,50 @@ article .category {
   text-indent: -9999px;
 }
 
+header.page {
+  position: relative;
+}
+
+header.page h1 {
+  position: relative;
+  left: 50px;
+  font-weight: 400;
+  font-size: 103px;
+  display: inline-block;
+  position: absolute;
+  letter-spacing: -10px;
+  padding: 0 25px;
+  background-color: rgba(34, 212, 99, 0.25);
+}
+
+header.page h1 a,
+header.page h1 a:visited {
+  text-decoration: none;
+  color: #fff;
+}
+
+header.page h6 {
+  margin: 0;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  position: absolute;
+  right: 30px;
+  top: 40px;
+}
+
+.pagination {
+  display: block;
+  text-align: center;
+}
+
+.pagination a {
+  font-size: 22px;
+  display: inline-block;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
 .index article,
 .page article {
   display: block;
@@ -102,6 +145,7 @@ article .category {
 .index article .title,
 .page article .title {
   font-size: 28px;
+  line-height: 28px;
   text-decoration: none;
   display: block;
   color: #333;

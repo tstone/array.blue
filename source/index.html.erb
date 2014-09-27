@@ -4,7 +4,7 @@ per_page: 20
 ---
 
 
-<div role="main">
+<div class="list">
   <% page_articles.each do |article| %>
     <article>
       <% link_to(article) do %>
@@ -18,13 +18,15 @@ per_page: 20
     </article>
   <% end %>
 
-  <% if prev_page %>
-    <%= link_to "&lt; Newer", prev_page %>
-  <% end %>
+  <div class="pagination">
+    <% if prev_page %>
+      <%= link_to "&lt;&lt; Newer Posts", prev_page, class: "prev" %>
+    <% end %>
 
-  <% if next_page %>
-    <%= link_to "Older &gt;", next_page %>
-  <% end %>
+    <% if next_page %>
+      <%= link_to "Older Posts &gt;&gt;", next_page, class: "next" %>
+    <% end %>
+  </div>
 </div>
 
 <aside>

@@ -1,6 +1,6 @@
 ---
 date: August 1, 2014
-title: Implicits and Challenges for Declarative Programming
+title: Challenges with Implicits for Declarative Programming
 tags: scala, declarative, implicits
 category: scala
 ---
