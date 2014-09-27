@@ -8,6 +8,8 @@ set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true
 
 page "/feed.xml", layout: false
+page "/presentations/*/*", :layout => false
+page "/stuff/taig-calc.html", :layout => false
 
 ###
 # Compass
@@ -88,6 +90,11 @@ end
 # --- Syntax ---
 
 activate :syntax, :line_numbers => true
+
+
+# --- Pretty URL ---
+
+activate :directory_indexes
 
 
 # --- Blog ---

@@ -16,6 +16,14 @@ main {
   position: relative;
 }
 
+aside > div {
+  margin-bottom: 40px;
+}
+
+aside > div:last-child {
+  margin-bottom: 0;
+}
+
 header {
   min-height: 100px;
 }
@@ -24,6 +32,11 @@ footer {
   margin-top: 100px;
   min-height: 100px;
 }
+
+hr {
+  margin-bottom: 30px;
+}
+
 
 
 
@@ -47,9 +60,14 @@ footer {
     right: 0;
   }
 
-  article {
+  .index article,
+  .page article {
     margin-bottom: 60px;
     padding-left: 40px;
+  }
+
+  .presentations article {
+    margin-bottom: 30px;
   }
 
   article h2,

@@ -30,19 +30,28 @@ per_page: 20
 </div>
 
 <aside>
-  <h2>Tags</h2>
-  <ol class="tags">
-    <% blog.tags.each do |tag, articles| %>
-      <% if articles.size > 1 %>
-        <li><%= link_to "#{tag}", tag_path(tag) %></li>
-      <% end %>
-    <% end %>
-  </ol>
 
-  <h2>By Year</h2>
-  <ol class="years">
+  <div class="pages">
+    <h2>Stuff</h2>
+    <a href="/presentations/">Presentation Slides</a>
+    <a href="/stuff/taig-calc/" data-no-turbolink="true">Taig CNC Calculator</a>
+  </div>
+
+  <div>
+    <h2>Tags</h2>
+    <ol class="tags">
+      <% blog.tags.each do |tag, articles| %>
+        <% if articles.size > 1 %>
+          <li><%= link_to "#{tag}", tag_path(tag) %></li>
+        <% end %>
+      <% end %>
+    </ol>
+  </div>
+
+  <div class="years">
+    <h2>By Year</h2>
     <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-      <li><%= link_to "#{year} (#{articles.size})", blog_year_path(year) %></li>
+      <%= link_to "#{year} (#{articles.size})", blog_year_path(year) %>
     <% end %>
-  </ol>
+  </div>
 </aside>

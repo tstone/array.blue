@@ -119,6 +119,17 @@ header.page h6 {
   top: 40px;
 }
 
+aside h2 {
+  font-size: 16px;
+}
+
+aside .years a,
+aside .pages a {
+  display: block;
+  margin-bottom: 12px;
+  text-decoration: none;
+}
+
 .pagination {
   display: block;
   text-align: center;
@@ -132,18 +143,21 @@ header.page h6 {
 }
 
 .index article,
-.page article {
+.page article,
+.presentation article {
   display: block;
   line-height: 23px;
 }
 
 .index article:last-child,
-.page article:last-child {
+.page article:last-child,
+.presentation article:last-child {
   margin-bottom: 0;
 }
 
 .index article .title,
-.page article .title {
+.page article .title,
+.presentations article .title {
   font-size: 28px;
   line-height: 28px;
   text-decoration: none;
@@ -152,7 +166,8 @@ header.page h6 {
 }
 
 .index article .date,
-.page article .date {
+.page article .date,
+.presentations article .date {
   color: #999;
   font-size: 16px;
   display: inline-block;
