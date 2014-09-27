@@ -93,6 +93,9 @@ GEM
       middleman-core (>= 3.2)
     middleman-ogp (1.0.4)
       middleman-core (~> 3.2)
+    middleman-search_engine_sitemap (1.1.0)
+      builder
+      middleman-core (~> 3.2)
     middleman-sprockets (3.3.10)
       middleman-core (~> 3.3)
       sprockets (~> 2.12.1)
@@ -165,6 +168,7 @@ DEPENDENCIES
   middleman-deploy (~> 0.3.0)
   middleman-minify-html
   middleman-ogp
+  middleman-search_engine_sitemap
   middleman-syntax
   nokogiri
   redcarpet
