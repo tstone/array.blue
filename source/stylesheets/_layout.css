@@ -1,5 +1,8 @@
 
-* { box-sizing: border-box; }
+* {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 
 html, body {
   margin: auto;
@@ -12,10 +15,6 @@ header > :first-child,
 main > :first-child,
 aside > :first-child {
   margin-top: 0;
-}
-
-main {
-  position: relative;
 }
 
 aside > div {
@@ -32,8 +31,10 @@ header {
 
 .wrapper {
   min-height: 100%;
-  margin-bottom: -100px;
+  margin: 0 auto -100px auto;
   padding-bottom: 75px;
+  width: 100%;
+  display: block;
 }
 
 .wrapper:after {
@@ -81,12 +82,13 @@ article h5 {
 
 
 /* DESKTOP */
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) { */
 
   main {
-    position: relative;
     width: 900px;
     margin: 75px auto 0 auto;
+    display: block;
+    position: relative;
   }
 
   .list {
@@ -99,13 +101,12 @@ article h5 {
     top: 0;
     right: 0;
   }
-}
+/* } */
 
 
 /* DEVICE */
 @media (max-width: 1023px) {
   main {
-    position: relative;
     width: 100%;
     margin: 50px auto 0 auto;
     padding: 0 20px;
