@@ -48,9 +48,6 @@ page "/stuff/taig-calc.html", :layout => false
 # Automatic image dimensions on image_tag helper
 # activate :automatic_image_sizes
 
-# Reload the browser automatically whenever files change
-activate :livereload
-
 # Methods defined in the helpers block are available in templates
 # helpers do
 #   def some_helper
