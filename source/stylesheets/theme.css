@@ -88,39 +88,6 @@ article .category {
   text-indent: -9999px;
 }
 
-
-article .category.ruby {
-  background-image: url(../images/categories/ruby-20.png);
-}
-
-article .category.python {
-  background-image: url(../images/categories/python.png);
-}
-
-article .category.javascript {
-  background-image: url(../images/categories/javascript.jpg);
-}
-
-article .category.c-sharp {
-  background-image: url(../images/categories/csharp.jpg);
-}
-
-article .category.f-sharp {
-  background-image: url(../images/categories/fsharp.png);
-}
-
-article .category.git {
-  background-image: url(../images/categories/git.jpg);
-}
-
-article .category.scala {
-  background-image: url(../images/categories/scala.png);
-}
-
-article .category.windows {
-  background-image: url(../images/categories/windows.png);
-}
-
 .index article,
 .page article {
   display: block;

@@ -1,5 +1,5 @@
 ---
-title: Determine Model Change v2
+title: Determine Model Change (in Django)
 date: june 6, 2009
 tags: django, python
 category: python

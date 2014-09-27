@@ -1,7 +1,8 @@
 ---
 title: Efficiently View Apache Log Files on Windows
 date: dec 8, 2009
-tags: [apache]
+tags: apache, windows
+category: windows
 ---
 
 One of the annoying things about using multiple platforms is when one platform has a useful utility (no matter how small) and the other platform doesn’t. Have you ever needed to regularly check an Apache log file on your Windows development machine? The shell user inside me says “just tail it”… but this is Windows.

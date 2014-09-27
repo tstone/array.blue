@@ -1,5 +1,5 @@
 ---
-title:  Looking Back on a Fulltime Year With Scala
+title:  Looking Back on a Year With Scala
 date:   August 15, 2014
 tags:   scala
 category:  scala

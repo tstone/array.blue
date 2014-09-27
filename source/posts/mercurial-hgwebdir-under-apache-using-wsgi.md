@@ -1,7 +1,8 @@
 ---
 title: Mercurial 'hgwebdir' under Apache using WSGI
 date: nov 2, 2009
-tags: [apache, mercurial, wsgi]
+tags: apache, mercurial, wsgi
+category: python
 ---
 
 The doc for setting up [HgWebDirStepByStep](http://mercurial.selenic.com/wiki/HgWebDirStepByStep) sure make it seem harder than it really is. Maybe it is hard. Maybe it’s just that I spent so much time trying to understand the doc, that when I actually just tried it myself it wasn’t that bad.
