@@ -89,7 +89,7 @@ object Json {
 }
 ```
 
-This looks and behaves exactly like the build-in `Json.obj` except it removes empty properties.  All that's necessary now is to provide an implicit
+This looks and behaves exactly like the built-in `Json.obj` except it removes empty properties.  All that's necessary now is to provide an implicit
 `(String, A) => JsProperty` in scope to control the rules around what is considered "emtpy".  I wrote this all up in a [library](https://github.com/tstone/play-rwjson),
 and these are the default rules:
 
