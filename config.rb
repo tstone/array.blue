@@ -148,8 +148,3 @@ activate :minify_html do |html|
   html.preserve_line_breaks       = false  # Preserve line breaks
   html.simple_boolean_attributes  = true   # Use simple boolean attributes
 end
-
-
-# --- Minify Images ---
-
-activate :imageoptim
