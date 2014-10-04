@@ -25,10 +25,6 @@ aside > div:last-child {
   margin-bottom: 0;
 }
 
-header {
-  min-height: 100px;
-}
-
 .wrapper {
   min-height: 100%;
   margin: 0 auto -100px auto;
@@ -95,6 +91,10 @@ article h5 {
     width: 700px;
   }
 
+  header {
+    min-height: 100px;
+  }
+
   aside {
     position: absolute;
     width: 200px;
@@ -104,20 +104,42 @@ article h5 {
 }
 
 
-/* DEVICE */
+/* TABLET */
 @media (max-width: 1023px) {
+
   main {
     width: 100%;
-    margin: 50px auto 0 auto;
-    padding: 0 20px;
+    padding: 0 25px;
+    margin: 75px auto 0 auto;
+    display: block;
+    position: relative;
   }
 
   .list {
     width: 100%;
   }
 
+  header {
+    height: 100px;
+  }
+
   aside {
     position: relative;
     width: 100%;
+  }
+}
+
+
+
+/* PHONE */
+@media (max-width: 480px) {
+  main {
+    width: 100%;
+    margin: 50px auto 0 auto;
+    padding: 0 20px;
+  }
+
+  header {
+    height: 50px;
   }
 }

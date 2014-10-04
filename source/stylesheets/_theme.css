@@ -119,6 +119,22 @@ header.page h6 {
   top: 40px;
 }
 
+@media (max-width: 480px) {
+
+  header.page h1 {
+    padding: 0 10px;
+    left: 0;
+    font-size: 54px;
+    letter-spacing: -1px;
+  }
+
+  header.page h6 {
+    top: 18px;
+    right: 10px;
+    font-size: 13px;
+  }
+}
+
 aside h2 {
   font-size: 16px;
 }
