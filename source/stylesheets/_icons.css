@@ -61,3 +61,7 @@ article .category.java {
 article .category.swift {
   background-image: url(../images/categories/swift-20.png);
 }
+
+article .category.clojure {
+  background-image: url(../images/categories/clojure-20.png);
+}
