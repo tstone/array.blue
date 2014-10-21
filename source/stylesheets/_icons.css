@@ -65,3 +65,7 @@ article .category.swift {
 article .category.clojure {
   background-image: url(../images/categories/clojure-20.png);
 }
+
+article .category.akka {
+  background-image: url(../images/categories/akka-20.png);
+}

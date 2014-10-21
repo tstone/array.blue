@@ -1,9 +1,8 @@
 ---
-title: "Computer Science in Scala: Visitor Pattern"
+title: Visitor Pattern Revisited in Scala
 date: September 30, 2014
-tags: cs, cs-in-scala, scala, patterns, scala, implicits
+tags: scala, patterns, implicits
 category: scala
-published: false
 ---
 
 The "visitor pattern" is one of those design patterns when reading in the abstract is hard to follow.  Before we look at how it might be useful
@@ -112,22 +111,29 @@ This is a decent improvement.  The visitor pattern in Scala now works as intende
 
 ## Using Native Language Features
 
-Scala might have a better way.  Implicit classes effectively allow extension methods on a class by combining a new class with an `implicit def`.  Say
-we kept our `BPMCalculator` object but turned it into a class and renamed the method from `visit` to `calculateBpm`.
+Scala has other, probably better ways to solve this.  Implicit classes effectively allow extension methods on a class by combining a
+new class with an `implicit def`.  Say we kept our `BPMCalculator` object but turned it into a class and renamed the method from
+`visit` to `calculateBpm`.
 
 ```scala
-class BPMCalculator {
-  def calculateBpm(audio: Audio) = {
-    // ... do some magic to determine BPM from audio stream ...
+object BPMCalculator {
+  implicit class BPMCalculatorAudio(audio: Audio) {
+    def calculateBpm = {
+      // ... do some magic to determine BPM from audio stream ...
+    }
   }
 
-  def calculateBpm(video: Video) = {
-    // ... extract audio stream
-    // ... do some magic to determine BPM from audio stream ...
+  implicit class BPMCalculatorVideo(video: Video) {}
+    def calculateBpm = {
+      // ... extract audio stream
+      // ... do some magic to determine BPM from audio stream ...
+    }
   }
 }
 ```
 
-An implicit def would allow a `Song` or `Video` to be...
+This `implicit class` can live anywhere in the code, but when imported  (`import BPMCalculator._`) makes the method `calculateBpm`
+available on `Audio` and `Video`.
 
-TODO: Finish me!
+Ultimately both the visitor pattern and the implicit class striving to implement the [Open/Close Principle](http://en.wikipedia.org/wiki/Open/closed_principle).
+Scala makes this possible wholey within the language.
