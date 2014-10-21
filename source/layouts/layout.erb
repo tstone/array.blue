@@ -17,23 +17,26 @@
     <%= javascript_include_tag "all" %>
   </head>
 
-  <body class="<%= page_classes %>">
+  <body class="<%= page_classes %>" itemscope itemtype="http://schema.org/Blog">
     <div class="wrapper">
       <header class="page">
-        <h1><a href="/">[ ].blue</a></h1>
-        <h6>Blog of Titus Stone</h6>
+        <h1 itemprop="name"><a href="/">[ ].blue</a></h1>
+        <h6 itemprop="author">Blog of <span itemprop="givenName">Titus</span> <span itemprop="familyName">Stone</span></h6>
       </header>
       <main>
 
         <% if current_article %>
-          <article>
-            <h1 class="title"><%= current_article.title %></h1>
-            <h4 class="date"><%= current_article.date.strftime('%B %e, %Y') %></h4>
+          <article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+            <h1 class="title" itemprop="headline"><%= current_article.title %></h1>
+            <h4 class="date" itemprop="dateCreated"><%= current_article.date.strftime('%B %e, %Y') %></h4>
+
+            <div itemprop="articleBody">
         <% end %>
 
         <%= yield %>
 
         <% if current_article %>
+            </div>
           </article>
         <% end %>
 

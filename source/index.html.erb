@@ -6,13 +6,13 @@ per_page: 20
 
 <div class="list">
   <% page_articles.each do |article| %>
-    <article>
+    <article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
       <% link_to(article) do %>
-        <span class="title"><%= article.title %></span>
-        <span class="date"><%= article.date.strftime('%B %e, %Y') %></span>
+        <span class="title" itemprop="headline"><%= article.title %></span>
+        <span class="date" itemprop="dateCreated"><%= article.date.strftime('%B %e, %Y') %></span>
 
         <% if article.data.category %>
-          <span class="category <%= article.data.category %>"><%= article.data.category %></span>
+          <span class="category <%= article.data.category %>" itemprop="keywords"><%= article.data.category %></span>
         <% end %>
       <% end %>
     </article>
@@ -20,11 +20,11 @@ per_page: 20
 
   <div class="pagination">
     <% if prev_page %>
-      <%= link_to "⇜ Newer Posts", prev_page, class: "prev" %>
+      <%= link_to "⇜ Newer Posts", prev_page, class: "prev", rel: "prev" %>
     <% end %>
 
     <% if next_page %>
-      <%= link_to "Older Posts ⇝", next_page, class: "next" %>
+      <%= link_to "Older Posts ⇝", next_page, class: "next", rel: "next" %>
     <% end %>
   </div>
 </div>
