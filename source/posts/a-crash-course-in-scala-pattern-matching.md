@@ -105,6 +105,27 @@ val Person(name, gender) = person
 println(s"Hello $name")
 ```
 
+## Anything and Everything
+
+One of the things I haven't yet mentioned is that Scala requires pattern matches to be _exhaustive_.  That means they need to cover every possibility.
+This can be sovled by using either the `_` when you don't care about what the case is or a value name when you do care.
+
+```scala
+val person = Person("Bob", "male")
+
+// Capture the "any" case
+person match {
+  case Person("Bob", _) => print(s"Hello Bob.")
+  case person => print(s"${person.name}, we don't know you")
+}
+
+// Throw away the "any" case
+person match {
+  case Person("Bob", _) => print(s"Hello Bob.")
+  case _ => print(s"We don't know you")
+}
+```
+
 ## Guards
 
 So what happens if we want to have a pattern of a range?  Say our Person class had age instead of gender, we could do something like…
@@ -123,7 +144,7 @@ The `if age < 15` bit after the pattern is called a "guard".  It allows an addit
 
 ## Cons (the good kind)
 
-There are some neat built-in patterns that are worth knowing about, in particular `::` is.  In Scala `::` is both a function and a pattern named "cons".  Sequences (arrays, lists, etc.) are based on a computer science concept called ["linked lists"](http://en.wikipedia.org/wiki/Linked_list).  The wikipedia page has a nice graphic which you might want to check out, but basically a linked list is a strategy for storing things in memory where each node has a value and a pointer to the next value.  We could express this with a class…
+There are some neat built-in patterns that are worth knowing about, in particular `::` is.  In Scala `::` is both a function and a pattern named "cons".  Some sequences (lists, etc.) are based on a computer science concept called ["linked lists"](http://en.wikipedia.org/wiki/Linked_list).  The wikipedia page has a nice graphic which you might want to check out, but basically a linked list is a strategy for storing things in memory where each node has a value and a pointer to the next value.  We could express this with a class…
 
 ```scala
 case class Node(value: String, next: Node)
@@ -162,22 +183,29 @@ list match {
 }
 ```
 
-This is the pattern you see in Steve's example.  In this case `head` would be 1 and `tail` would be Seq(2, 3) because of how cons works.  At this point you should notice the use of head/tail which align with the recursive solution patterns I sent you.
+In this case `head` would be 1 and `tail` would be `Seq(2, 3)`.
 
 ## An Improvement
 
-Going back to our inital example of having a pattern that matches on the first letter of a `String`, because people are so used to booleans it would be easy to use the cons pattern with a guard...
+Going back to our initial example of having a pattern that matches on the first letter of a `String`, because people are so used to booleans it would be easy to use the cons pattern with a guard...
 
 ```scala
 case first :: remainder if first == "A" => ...
 ```
 
-The real benefit of patterns is that it affords us the opportunity to completely bypass booleans (ie. if/thens) and simply express the case we're interested in.  We could instead convert our `String` to a char array and use cons to match the character we're intersted in...
+The real benefit of patterns is that it affords us the opportunity to completely bypass booleans (ie. if/thens) and simply express the case we're interested in.  We could instead convert our `String` to a char array and use cons to match the character we're interested in...
 
 ```scala
 case 'A' :: rest => ...
 ```
 
 This pattern reads "the case where the first letter of a string is 'A' and the remainder is anything, assigned to the variable `rest`" which is exactly what we want.
+
+```scala
+"asdf".toCharArray match {
+  case 'A' :: _ => ...
+  case 'B' :: _ => ...
+}
+```
 
 Patterns take some time to learn and get comfortable with but they offer the advantage of being much easier to read.  Once you understand cons you can look at the pattern and instantly know the case we care about rather than having to mentally translate things to a boolean (or worse, mentally make them NOT because a `!` Is hanging around).
