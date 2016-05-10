@@ -15,3 +15,10 @@ Source for my blog, http://array.blue
 ```
 $ bundle exec middleman
 ```
+
+## Publishing
+
+```
+git remote add ghpage <repo to publish to>
+bundle exec middleman deploy
+```
