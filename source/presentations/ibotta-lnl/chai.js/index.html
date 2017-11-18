@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Expressively Custom Expectations in Chai.js</title>
+
+		<meta name="description" content="A look at writing descriptive and customer expectations in Chai.js">
+		<meta name="author" content="Titus Stone">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		<style type="text/css">
+			.reveal pre code { padding: 20px; margin: 40px auto; font-size: 22px; }
+			.reveal ul { padding-left: 15px; }
+			.reveal ul li { margin-bottom: 25px; }
+			.reveal h2 + h4 { margin-top: 40px; }
+
+			/* Slide-show specific */
+			#before-box .error { color: red; position: relative; }
+			#before-box .error:before { content: 'x'; background-color: red; color: #fff;
+  				border-radius: 20px; height: 40px; width: 40px; display: block; font-family: 'Trebuchet MS', Helvetica;
+  				text-align: center; line-height: 35px; position: absolute; top: 5px; left: -45px; }
+
+			#title-box *[data-title] { position: relative; cursor: pointer; }
+			#title-box *[data-title]:after { position: absolute; content: attr(data-title); display: block;
+				right: -125px; width: 200px; top: -20px; height: 50px; transition: all 0.35s ease-out;
+				background-color: #E9EDB7; padding: 20px; border-radius: 10px; opacity: 0;
+				text-align: center; font-size: 16px; line-height: 16px; -webkit-transform: scale(0.25);
+				box-shadow: 0 3px 15px rgba(0,0,0,0.5); -webkit-filter: blur(5px); }
+			#title-box *[data-title]:hover:after { opacity: 1; -webkit-transform: scale(1); -webkit-filter: blur(0); right: -250px; }
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+				<section>
+					<h1 style="font-size: 120px;">Expressively<br/>Custom<br/>Expectations<br/>in Chai.js</h1>
+					<h2 style="font-weight: bold; color: steelblue;">November 2017</h2>
+					<h3 style="margin-top: 35px;">Titus Stone</h3>
+				</section>
+
+				<section>
+					<h2>Ever had This Happen?</h2>
+					<ul style="margin-top: 20px;">
+						<li>You implement some new code</li>
+						<li>Run the tests</li>
+						<li>And some unrelated test fails with a meaningless error</li>
+					</ul>
+					<pre><code>1) UserService #get returns a user:
+     AssertionError: expected false to be true</code></pre>
+				</section>
+
+				<section>
+					<h2>How About This?</h2>
+					<ul style="margin-top: 20px;">
+						<li>You add 1 new property to a model</li>
+						<li>Run the tests</li>
+						<li>32 tests fail because it's missing your new property</li>
+					</ul>
+					<pre><code>  1 passing (1m 21s)
+  32 failing</code></pre>
+				</section>
+
+				<section>
+					<h3>What Both of Scenarios Have in Common Is Less-Than-Great Expectations</h3>
+				</section>
+
+				<section>
+					<h2>Expressively Custom<br/>Expectations in Chai.js</h2>
+					<ol>
+						<li>Language included with Chai.js</li>
+						<li>Matching expectations to behavior</li>
+						<li>Defining custom expectations</li>
+						<li>When not to use custom expectations</li>
+						<li>Broader team issues with expectations</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>Language Included with Chai.js</h2>
+					<p>Chai includes three syntaxes:</p>
+
+					<pre><code data-trim contenteditable>
+value.should.XXX
+expect(value).XXX
+assert.XXX(value)
+					</code></pre>
+
+					<p>The 'expect style' is primarily used at Ibotta</p>
+				</section>
+
+				<section>
+					<h2>Expect</h2>
+					<p>Expect is a function that takes a single argument,<br/>the subject under test.</p>
+					<pre><code data-trim contenteditable>
+expect(value)
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Expect</h2>
+					<p>What is expected about the subject is a <strong>property</strong> OR <strong>chainable method</strong> on the return of the expect function.</p>
+					<pre><code data-trim contenteditable>
+expect(value).&lt;property or chainable method&gt;
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Expect</h2>
+					<p>If you're coming from an RSpec or JUnit influecned background, <strong>properties</strong> and <strong>chainable methods</strong> have additional use cases compared to traditional matchers and assertions</p>
+					<br/><p>"property" and "chainable method" are Chai vocabulary</p>
+				</section>
+
+				<section>
+					<h2>Chai Properties</h2>
+					<p>A property can be the assertion</p>
+					<pre><code data-trim contenteditable>
+expect('bar').undefined // fails
+					</code></pre>
+					<p>"assertion property" (my term)</p>
+				</section>
+
+				<section>
+					<h2>Assertion Property</h2>
+					<p>An assertion property works because of getters in javascript, which run a function when a<br/>property is accessed.<br/><br/>This can be imagined as*...</p>
+					<pre><code data-trim contenteditable>
+get undefined() {
+  return typeof this._obj === 'undefined'
+}
+					</code></pre>
+					<small>* = the actual implementation is much different.  This is just for illustrative purposes.</small>
+				</section>
+
+				<section>
+					<h2>Built-in Assertion Properties</h2>
+					<p>ok, true, false, null, undefined, NaN, exist, empty, arguments, itself, sealed, frozen, finite</p>
+				</section>
+
+				<section>
+					<h2>Chai Properties</h2>
+					<p>A property can be purely cosmetic</p>
+					<p><strong>to</strong> and <strong>be</strong> have no effect on the assertion but make it clearer for human readers of the code</p>
+					<pre><code data-trim contenteditable>
+expect('foo').to.be.undefined // fails
+					</code></pre>
+					<p>"cosmetic property" (my term)</p>
+				</section>
+
+				<section>
+					<h2>Built-in Cosmetic Properties</h2>
+					<p>to, be, been, is, that, which, and, has,<br/>have, with, at, of, same, but, does</p>
+				</section>
+
+				<section>
+					<h2>Chai Properties</h2>
+					<p>Be aware that cosmetic properties are no-ops, thus used by themselves will always pass because they have no assertions (no reason to fail)</p>
+					<pre><code data-trim contenteditable>
+expect('foo').have.to.with.same.be; // passes
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Chai Properties</h2>
+					<p>Properties can set a flag that alters the behavior of assertions coming after it</p>
+					<pre><code data-trim contenteditable>
+expect('foo').not.be.undefined // passes
+					</code></pre>
+					<p>"flagging property" (my term)</p>
+				</section>
+
+				<section>
+					<h2>Built-in Flagging Properties</h2>
+					<p>not, deep, nested, own, ordered, any, all</p>
+				</section>
+
+				<section>
+					<h2>Chai Chainable Methods</h2>
+					<p>A method is like an assertion property that uses one or more additional values</p>
+					<pre><code data-trim contenteditable>
+expect('foo').equal('foo'); // passes
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Built-in Chainable Methods</h2>
+					<p>a, include, equal, eql, above, below, least, most, within, instanceof, property, ownPropertyDescriptor, lengthOf, match, string, keys, throw, respondTo,
+					satisfy, closeTo, members, oneOf, change, increase, decrease, by, fail</p>
+				</section>
+
+				<section>
+					<h2>Chai Chainability</h2>
+					<p>Properties and methods can go after any other property or method</p>
+					<pre><code data-trim contenteditable>
+expect('foo').to.equal('foo').and.not.be.undefined; // passes
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Chai Properties</h2>
+					<p>Flags apply to all subsequent properties and method,<br/>so order may matter</p>
+					<pre><code data-trim contenteditable>
+expect('foo').to.not.be.undefined.and.equal('foo') // fails
+					</code></pre>
+					<p>fails because the 'negate' flag is applyed to <strong>equal</strong></p>
+				</section>
+
+				<section>
+					<h2>Opinion</h2>
+					<p>Conjunction cosmetic properties (and, but) are a smell.</p>
+					<p>Just write two expectations.</p>
+				</section>
+
+				<section>
+					<h3>Questions on the core language of properties and chainable methods Chai includes?</h3>
+				</section>
+
+				<section>
+					<h3>Matching expectations to behavior</h3>
+					<p>aka "What should I expect on?"</p>
+				</section>
+
+				<section>
+					<h3>Q: What should I expect on?</h3>
+					<p>A: How do you know it's working?</p>
+				</section>
+
+				<section>
+					<h3>Rules of Thumb</h3>
+					<h4>1. Always expect on the most specific thing you can</h4>
+					<p><strong>Why:</strong> By testing on the most specific thing, the error or problem identified by a failing test has a much higher likelyhood to be obvious to the human what is wrong</p>
+				</section>
+
+				<section>
+					<h3>Rules of Thumb</h3>
+					<h4>2. Only expect on what is being tested and no more</h4>
+					<p><strong>Why:</strong> By not testing on things not under test, it reduces the likelyhood of many tests failing because 1 thing changed</p>
+					<p><strong>An ideal</strong> -- When 1 thing changes, 1 test fails</p>
+				</section>
+
+				<section>
+					<h3>How do you know the most specific thing to expect on?</h3>
+				</section>
+
+				<section>
+					<h3>All code can be divided<br/>into two buckets:</h3>
+					<p>Side effecting and non-side effecting</p>
+				</section>
+
+				<section>
+					<h3>Side Effecting: Something about the world changes</h3>
+					<p>Example: A property gets mutated on an object</p>
+					<p>Example: A metric is recorded</p>
+				</section>
+
+				<section>
+					<h3>Non-Side Effecting: Nothing about the world changes; I get the result of a calcuation back</h3>
+					<p>Example: Adding two numbers together</p>
+					<p>Example: Getting a record from a database</p>
+				</section>
+
+				<section>
+					<h3>Side Effecting Expectations</h3>
+					<ol>
+						<li>Do I know this is working because of a state of an object given to another object?</li>
+						<li>Do I know this is working because of a value given to another object?</li>
+						<li>Do I know this is working because of a method invoked on another object (ie. another side effect)?</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Non-Side Effecting</h3>
+					<ol>
+						<li>I know this is working because of the value that I get back</li>
+					</ol>
+					<br/></br>
+					<p><strong>Caveat:</strong> For operations that depend on other services it's usually necessary to either <strong>a.</strong> abandon unit testing for integration testing, or <strong>b.</strong> to treat a non-side effecting function like a side effecting function in order to test one particlar path through the computation.</p>
+				</section>
+
+				<section>
+					<h3>Example Behavior:<br/>When the "active" argument is given on the read function, only return records that are flagged active</h3>
+					<br/>
+					<p>We could <strong>a.</strong> read from a test version of the database<br/>(expect on the result)</p>
+					-OR-</br>
+					<p>We could <strong>b.</strong> test for the existence of "WHERE ACTIVE = true" on the query, treating the function like a side effecting function but keeping it a unit test<br/>(expect on the state of some object given to another object)</p>
+				</section>
+
+				<section>
+					<img style="margin-top: -150px" src="flowchart.png" />
+				</section>
+
+				<section>
+					<h2>Expect on a Return Value</h2>
+					<pre><code data-trim contenteditable>
+const result = subject.behavior();
+expect(result).to.equal(whatever);
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Expect on the State of an Object Given to Another Object</h2>
+					<pre><code data-trim contenteditable>
+const dependency = { get: sandbox.spy() };
+const subject = new MyService(dependency);
+subject.behavior();
+
+const query = dependency.get.getCall(0).args[0];
+expect(query.property).to.equal(whatever);
+					</code></pre>
+					<p>sandbox.spy comes from Sinon</p>
+				</section>
+
+				<section>
+					<h2>Expect on a Value Given to Another Object<br/>(Introspetion Approach)</h2>
+					<pre><code data-trim contenteditable>
+const dependency = { get: sandbox.spy() };
+const subject = new MyService(dependency);
+subject.behavior();
+
+const query = dependency.get.getCall(0).args[0];
+expect(query).to.equal(whatever);
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Expect on a Value Given to Another Object<br/>(withArgs Approach)</h2>
+					<pre><code data-trim contenteditable>
+const dependency = { get: function(){} };
+sandbox.mock(dependency)
+  .expects('get')
+  .withArgs(whatever);
+
+subject.behavior();
+					</code></pre>
+					<p>this does not use Chai at all.</br>sandbox.mock comes from Sinon.</p>
+				</section>
+
+				<section>
+					<h3>Questions on matching</br>expectations to behavior?</h3>
+				</section>
+
+				<section>
+					<h3>Sometimes the built in properties and methods aren't enough</h3>
+					<ul>
+						<li>Extracting a time piece of state from a complex object to assert on it is long, multi-line effort</li>
+						<li>Certain behavior rules in the domain are commonly asserted on in many tests</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>In these cases a Chai plugin can be written to extend the included properties and methods</h3>
+					<ul>
+						<li>Do you need a property or a method?</li>
+						<li>Do you just need to check for the truthiness of something? (Yes: use an assertion property)</li>
+						<li>Do you need an additional value to know if something is correct? (Yes: method)</li>
+						<li>Do you need to toggle checking for certain things? (Yes: use a flagging property and method or assertion property)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Chai Plugin Skeleton</h3>
+					<pre><code data-trim contenteditable>
+export default function(chai, utils) {
+  const Assertion = chai.Assertion;
+
+  // your plugin here
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Using Your Plugin</h3>
+					<pre><code data-trim contenteditable>
+// test-setup.js
+import plugin from './myPlugin';
+chai.use(plugin);
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Custom Assertion Property</h3>
+					<p>Definition</p>
+					<pre><code data-trim contenteditable>
+utils.addProperty(Assertion.prototype, 'example', function(){
+  // make assertions here
+});
+					</code></pre>
+					<p>In use</p>
+					<pre><code data-trim contenteditable>
+expect(value).to.be.a.example;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Custom Assertion Property</h3>
+					<br/>
+					<p>The value under test is available via <strong>this._obj</strong></p>
+					<br/>
+					<p>Assertions against that value can be performed with one of two approaches:</p>
+					<ol>
+						<li><strong>this.assert</strong> -- Allows any boolean test with completely custom failure messages</li>
+						<li><strong>new Assertion(givenValue, customMessage)</strong> -- Allows composition with existing expectations</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Custom Assertion Property Example (this.assert)</h3>
+					<pre><code data-trim contenteditable>
+utils.addProperty(Assertion.prototype, 'example', function(){
+  this.assert(
+    this._obj === 'expected',
+    'Expected #{this} to be "expected" but was not',
+    'Expected #{this} to not be "expected" but was',
+  );
+});
+					</code></pre>
+					<p>On failure:</p>
+					<pre><code data-trim contenteditable>
+AssertionError: Expected value to be "expected" but was not
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Custom Assertion Property Example (Assertion)</h3>
+					<pre><code data-trim contenteditable>
+utils.addProperty(Assertion.prototype, 'example', function(){
+  const msg = 'value was not "example"';
+  new Assertion(this._obj, msg).to.eql('example');
+});
+					</code></pre>
+					<p>On failure:</p>
+					<pre><code data-trim contenteditable>
+AssertionError: value was not "example": Expected value to equal "expected"
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Custom Method</h3>
+					<p>Definition</p>
+					<pre><code data-trim contenteditable>
+Assertion.addMethod('method', function(arg1) {
+  // make assertions here.
+  // arg1 is the value given during the expectation
+});
+					</code></pre>
+					<p>In use</p>
+					<pre><code data-trim contenteditable>
+expect(value).to.method('arg1');
+					</code></pre>
+				</section>
+
+				<!-- TODO: When not to use custom properties/methods -->
+				<!-- TODO: Broader concerns:  Documentation, discoverability, maintenance, backwards incompatibility -->
+
+				<section>
+					<h2>Further Learning</h2>
+					<ul>
+						<!-- TODO -->
+					<ul>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme,
+				transition: Reveal.getQueryHash().transition || 'default',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+					// { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
