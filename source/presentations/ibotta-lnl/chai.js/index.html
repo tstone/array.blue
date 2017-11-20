@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Expressively Custom Expectations in Chai.js</title>
+		<title>Expressive Expectations in Chai.js</title>
 
 		<meta name="description" content="A look at writing descriptive and customer expectations in Chai.js">
 		<meta name="author" content="Titus Stone">
@@ -52,7 +52,7 @@
 			<div class="slides">
 
 				<section>
-					<h1 style="font-size: 120px;">Expressively<br/>Custom<br/>Expectations<br/>in Chai.js</h1>
+					<h1 style="font-size: 120px;">Expressive<br/>Expectations<br/>in Chai.js</h1>
 					<h2 style="font-weight: bold; color: steelblue;">November 2017</h2>
 					<h3 style="margin-top: 35px;">Titus Stone</h3>
 				</section>
@@ -84,7 +84,7 @@
 				</section>
 
 				<section>
-					<h2>Expressively Custom<br/>Expectations in Chai.js</h2>
+					<h2>Expressive Expectations</br/>in Chai.js</h2>
 					<ol>
 						<li>Language included with Chai.js</li>
 						<li>Matching expectations to behavior</li>
@@ -250,10 +250,10 @@ expect({ a: 1, b: 2 }).to.include.keys('a');
 					<pre><code data-trim contenteditable>
 expect([1,2,3]).to.equal([1,2,3]); // fails
 expect([1,2,3]).to.include(3,2,1); // passes
-expect([1,2,3,4]).to.include.members([1,4]); // passes (implcit any)
+expect([1,2,3]).to.include.members([1,4]); // fails (implicit all)
 expect([1,2,3,4]).to.include.all.members([3,2,1]); // passes
 expect([1,2,3]).to.include.ordered.members([3,2,1]); // fails
-expect([1,2,3]).to.include.ordered.members([2,3]); // fails (implicit all)
+expect([1,2,3]).to.include.ordered.members([2,3]); // fails
 					</code></pre>
 				</section>
 
@@ -575,13 +575,14 @@ const thou = expect;
 
 utils.addProperty(Assertion.prototype, 'shalt', function(){});
 utils.addProperty(Assertion.prototype, 'pass', function() {
-	this.assert(!utils.flag(this, 'negate'), 'Thou shalt not pass 🧙');
+  this.assert(!utils.flag(this, 'negate'), 'Thou shalt not pass 🧙');
 });
 					</code></pre>
 					<p>In use</p>
 					<pre><code data-trim contenteditable>
 thou(value).shalt.not.pass;
 					</code></pre>
+					<small>At some point in the future 🧙 will be a wizard emoji</small>
 				</section>
 
 
@@ -591,18 +592,12 @@ thou(value).shalt.not.pass;
 
 				<section>
 					<h3>When to and not to<br/>write custom plugins</h3>
-					<h5>aka Points of consideration before diving<br/>head long into chai plugins</h5>
+					<h5>Points of consideration before diving<br/>head long into chai plugins</h5>
 					<h5 style="font-size: 18px;">aka Me Asking Questions for 5 Minutes Instead of Providing Answers</h5>
 				</section>
 
 				<section>
 					<h3>Custom Plugins Aren't Free</h3>
-					<ul>
-						<li>Team on-boarding/training</li>
-						<li>Ambiguity / Sizing</li>
-						<li>Time to implement</li>
-						<li>Future maintenance / backwards compatibilty</li>
-					</ul>
 				</section>
 
 				<section>
@@ -618,18 +613,17 @@ thou(value).shalt.not.pass;
 				<section>
 					<h3>Ambiguity / Sizing</h3>
 					<ul>
-						<li>When does it become a mess of property and flag combinations?***</li>
-						<li>Is the property or method the smallest it can be?</li>
+						<li>When does it become a mess of property and flag combinations?</li>
 						<li>How do you know you got all the cases?</li>
+						<li>Is the property or method the smallest it can be?</li>
 					</ul>
-					<p style="font-size: 12px;">*** = this might be a challenge with the core language of Chai in general and only magnified by custom plugins</p>
 				</section>
 
 				<section>
 					<h3>Time to implement</h3>
 					<ul>
 						<li>Do we write unit tests for chai plugins?</li>
-						<li>Do all chai plugins need to be (and incur the overhead of) an NPM module?</li>
+						<li>Do all chai plugins need to be, and incur the overhead of, an NPM module?</li>
 					</ul>
 				</section>
 
@@ -639,12 +633,12 @@ thou(value).shalt.not.pass;
 						<li>How often will this need to change?</li>
 						<li>Will the chai plugins need to be re-written every time a refactor happens?</li>
 						<li>If it becomes an NPM module how are breaking changes handled?</li>
+						<li>What if multiple teams rely on the same expectations?</li>
 					</ul>
 				</section>
 
 				<section>
 					<h3>Any final questions?</h3>
-					<small>just wanted to point out this presentation was 100% meme free,<br/>which is kind of an accomplishment</small>
 				</section>
 
 			</div>
