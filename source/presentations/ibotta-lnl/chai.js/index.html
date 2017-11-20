@@ -223,12 +223,37 @@ expect('foo').to.not.be.undefined.and.equal('foo') // fails
 
 				<section>
 					<h2>Chai Chainable Methods</h2>
-					<p>Use a method like a method -OR- an assertion/flagging property. No examples as used in core language.</p>
-					<br/>
-					<p><strong>user</strong> acts as both a property and method:</p>
+					<p>Use a method like a method -OR- an assertion/flagging property.</p>
 					<pre><code data-trim contenteditable>
-expect(usr).to.be.a.user({ name: 'whatever' });
-expect(usr).to.be.a.user.with.property('name', 'whatever');
+expect({ a: 1, b: 2 }).to.include({ a: 1 });
+expect({ a: 1, b: 2 }).to.include.keys('a');
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Chai Chainable Methods</h2>
+					<ul>
+						<li><strong>.include</strong> is defined twice, once as a method, once as a property</li>
+						<li><strong>.include</strong> as a method uses the value and asserts immediately</li>
+						<li><strong>.include</strong> as a property adds a flag 'contains'</li>
+						<li><strong>.keys</strong> checks if the flag 'contains' exists and alters the behavior</li>
+					</ul>
+					<pre><code data-trim contenteditable>
+expect({ a: 1, b: 2 }).to.include({ a: 1 });
+expect({ a: 1, b: 2 }).to.include.keys('a');
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Chai Chainable Methods</h2>
+					<p>The interplay between flags and methods is worth understanding</p>
+					<pre><code data-trim contenteditable>
+expect([1,2,3]).to.equal([1,2,3]); // fails
+expect([1,2,3]).to.include(3,2,1); // passes
+expect([1,2,3,4]).to.include.members([1,4]); // passes (implcit any)
+expect([1,2,3,4]).to.include.all.members([3,2,1]); // passes
+expect([1,2,3]).to.include.ordered.members([3,2,1]); // fails
+expect([1,2,3]).to.include.ordered.members([2,3]); // fails (implicit all)
 					</code></pre>
 				</section>
 
@@ -499,12 +524,75 @@ expect(offer).is.a.mcomm.offer;
 				</section>
 
 				<section>
+					<h3>Respecting Built-in Flags</h3>
+					<p>any, all, contains, etc. (have to read the source to find what these are)</p>
+					<p>It's possible to read the same flags that the core library is using, and respect them in custom methods/properties.</p>
+					<pre><code data-trim contenteditable>
+// must have all values, 1, 2, and 3
+expect(offer).has.retailerIds([1, 2, 3]);
+// vs.
+// must have at least one of 3, 6, or 9
+expect(offer).to.contain.any.retailerIds([3, 6, 9]);
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Respecting Built-in Flags</h3>
+					<pre><code data-trim contenteditable>
+const contains = utils.flag(this, 'contains');
+const any = utils.flag(this, 'any');
+const all = utils.flag(this, 'all');
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Respecting Built-in Flags (Snippet)</h3>
+					<pre><code data-trim contenteditable>
+function assertArrayToArray(context, givenArray, expectedArray) {
+  if (!Array.isArray(expectedArray)) {
+    expectedArray = [expectedArray];
+  }
+
+  const contains = utils.flag(context, 'contains');
+  const any = utils.flag(context, 'any');
+  const all = utils.flag(context, 'all');
+
+  if (all && contains) {
+    return expectedArray.every((attr) => _.includes(givenArray, attr));
+  } else if (any && contains) {
+    return expectedArray.some((x, i) => givenArray[i] === x);
+  } else { // all (default)
+    return expectedArray.every((x, i) => givenArray[i] === x);
+  }
+}
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Stupid Custom Plugin Tricks</h3>
+					<pre><code data-trim contenteditable>
+const thou = expect;
+
+utils.addProperty(Assertion.prototype, 'shalt', function(){});
+utils.addProperty(Assertion.prototype, 'pass', function() {
+	this.assert(!utils.flag(this, 'negate'), 'Thou shalt not pass 🧙');
+});
+					</code></pre>
+					<p>In use</p>
+					<pre><code data-trim contenteditable>
+thou(value).shalt.not.pass;
+					</code></pre>
+				</section>
+
+
+				<section>
 					<h3>Questions writing chai plugins?</h3>
 				</section>
 
 				<section>
 					<h3>When to and not to<br/>write custom plugins</h3>
 					<h5>aka Points of consideration before diving<br/>head long into chai plugins</h5>
+					<h5 style="font-size: 18px;">aka Me Asking Questions for 5 Minutes Instead of Providing Answers</h5>
 				</section>
 
 				<section>
@@ -530,9 +618,11 @@ expect(offer).is.a.mcomm.offer;
 				<section>
 					<h3>Ambiguity / Sizing</h3>
 					<ul>
-						<li>Is the proprety or method the smallest it can be?</li>
+						<li>When does it become a mess of property and flag combinations?***</li>
+						<li>Is the property or method the smallest it can be?</li>
 						<li>How do you know you got all the cases?</li>
 					</ul>
+					<p style="font-size: 12px;">*** = this might be a challenge with the core language of Chai in general and only magnified by custom plugins</p>
 				</section>
 
 				<section>
