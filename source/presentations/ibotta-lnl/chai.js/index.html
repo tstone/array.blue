@@ -89,8 +89,7 @@
 						<li>Language included with Chai.js</li>
 						<li>Matching expectations to behavior</li>
 						<li>Defining custom expectations</li>
-						<li>When not to use custom expectations</li>
-						<li>Broader team issues with expectations</li>
+						<li>When to and not to write chai plugins</li>
 					</ol>
 				</section>
 
@@ -117,21 +116,21 @@ expect(value)
 
 				<section>
 					<h2>Expect</h2>
-					<p>What is expected about the subject is a <strong>property</strong> OR <strong>chainable method</strong> on the return of the expect function.</p>
+					<p>What is expected about the subject is a <strong>property</strong> OR <strong>(chainable) method</strong> on the return of the expect function.</p>
 					<pre><code data-trim contenteditable>
-expect(value).&lt;property or chainable method&gt;
+expect(value).&lt;property or method&gt;
 					</code></pre>
 				</section>
 
 				<section>
 					<h2>Expect</h2>
-					<p>If you're coming from an RSpec or JUnit influecned background, <strong>properties</strong> and <strong>chainable methods</strong> have additional use cases compared to traditional matchers and assertions</p>
+					<p>If you're coming from an RSpec or JUnit influecned background, <strong>properties</strong> and <strong>chainable methods</strong> have additional use cases compared to <strong>matchers</strong> and <strong>assertions</strong></p>
 					<br/><p>"property" and "chainable method" are Chai vocabulary</p>
 				</section>
 
 				<section>
 					<h2>Chai Properties</h2>
-					<p>A property can be the assertion</p>
+					<p>A property can be an/the assertion</p>
 					<pre><code data-trim contenteditable>
 expect('bar').undefined // fails
 					</code></pre>
@@ -179,9 +178,9 @@ expect('foo').have.to.with.same.be; // passes
 
 				<section>
 					<h2>Chai Properties</h2>
-					<p>Properties can set a flag that alters the behavior of assertions coming after it</p>
+					<p>Properties can set a flag that alters the behavior of assertions coming after it. <strong>not</strong> is a flagging property.</p>
 					<pre><code data-trim contenteditable>
-expect('foo').not.be.undefined // passes
+expect('foo').to.not.be.undefined // passes
 					</code></pre>
 					<p>"flagging property" (my term)</p>
 				</section>
@@ -192,40 +191,45 @@ expect('foo').not.be.undefined // passes
 				</section>
 
 				<section>
-					<h2>Chai Chainable Methods</h2>
-					<p>A method is like an assertion property that uses one or more additional values</p>
+					<h2>Chai Methods</h2>
+					<p>A method is like an assertion property that uses one or more additional values when expected</p>
 					<pre><code data-trim contenteditable>
 expect('foo').equal('foo'); // passes
 					</code></pre>
 				</section>
 
 				<section>
-					<h2>Built-in Chainable Methods</h2>
+					<h2>Built-in Methods</h2>
 					<p>a, include, equal, eql, above, below, least, most, within, instanceof, property, ownPropertyDescriptor, lengthOf, match, string, keys, throw, respondTo,
 					satisfy, closeTo, members, oneOf, change, increase, decrease, by, fail</p>
 				</section>
 
 				<section>
 					<h2>Chai Chainability</h2>
-					<p>Properties and methods can go after any other property or method</p>
+					<p>Properties and methods can go after any<br/>other property or method</p>
 					<pre><code data-trim contenteditable>
-expect('foo').to.equal('foo').and.not.be.undefined; // passes
+				expect('foo').to.equal('foo').and.not.be.undefined; // passes
 					</code></pre>
 				</section>
 
 				<section>
-					<h2>Chai Properties</h2>
+					<h2>Chai Chainability</h2>
 					<p>Flags apply to all subsequent properties and method,<br/>so order may matter</p>
 					<pre><code data-trim contenteditable>
 expect('foo').to.not.be.undefined.and.equal('foo') // fails
 					</code></pre>
-					<p>fails because the 'negate' flag is applyed to <strong>equal</strong></p>
+					<p>fails because the <strong>not</strong> is applyed to <strong>equal</strong></p>
 				</section>
 
 				<section>
-					<h2>Opinion</h2>
-					<p>Conjunction cosmetic properties (and, but) are a smell.</p>
-					<p>Just write two expectations.</p>
+					<h2>Chai Chainable Methods</h2>
+					<p>Use a method like a method -OR- an assertion/flagging property. No examples as used in core language.</p>
+					<br/>
+					<p><strong>user</strong> acts as both a property and method:</p>
+					<pre><code data-trim contenteditable>
+expect(usr).to.be.a.user({ name: 'whatever' });
+expect(usr).to.be.a.user.with.property('name', 'whatever');
+					</code></pre>
 				</section>
 
 				<section>
@@ -234,7 +238,6 @@ expect('foo').to.not.be.undefined.and.equal('foo') // fails
 
 				<section>
 					<h3>Matching expectations to behavior</h3>
-					<p>aka "What should I expect on?"</p>
 				</section>
 
 				<section>
@@ -279,7 +282,7 @@ expect('foo').to.not.be.undefined.and.equal('foo') // fails
 				<section>
 					<h3>Side Effecting Expectations</h3>
 					<ol>
-						<li>Do I know this is working because of a state of an object given to another object?</li>
+						<li>Do I know this is working because of the state of an object given to another object?</li>
 						<li>Do I know this is working because of a value given to another object?</li>
 						<li>Do I know this is working because of a method invoked on another object (ie. another side effect)?</li>
 					</ol>
@@ -303,7 +306,7 @@ expect('foo').to.not.be.undefined.and.equal('foo') // fails
 				</section>
 
 				<section>
-					<img style="margin-top: -150px" src="flowchart.png" />
+					<img style="margin-top: -50px; height: 750px;" src="flowchart.png" />
 				</section>
 
 				<section>
@@ -359,7 +362,7 @@ subject.behavior();
 				<section>
 					<h3>Sometimes the built in properties and methods aren't enough</h3>
 					<ul>
-						<li>Extracting a time piece of state from a complex object to assert on it is long, multi-line effort</li>
+						<li>Extracting a piece of state from a complex object to assert on it is long, multi-line effort</li>
 						<li>Certain behavior rules in the domain are commonly asserted on in many tests</li>
 					</ul>
 				</section>
@@ -466,14 +469,92 @@ expect(value).to.method('arg1');
 					</code></pre>
 				</section>
 
-				<!-- TODO: When not to use custom properties/methods -->
-				<!-- TODO: Broader concerns:  Documentation, discoverability, maintenance, backwards incompatibility -->
+				<section>
+					<h3>Custom Flagging Property</h3>
+					<p>Set</p>
+					<pre><code data-trim contenteditable>
+utils.addProperty(Assertion.prototype, 'mcomm', function(){
+  utils.flag(this, 'mcomm', true);  // set a flag
+});
+					</code></pre>
+					<p>Get</p>
+					<pre><code data-trim contenteditable>
+utils.addProperty(Assertion.prototype, 'offer', function() {
+  new Assertion(this._obj).is.an.instanceof(Offer);
+  if (utils.flag(this, 'mcomm')) {
+    this.assert(this._obj.mcommerce == true, /* positive msg */, /* negative msg */);
+  }
+});
+					</code></pre>
+				</section>
 
 				<section>
-					<h2>Further Learning</h2>
+					<h3>Custom Flagging Property</h3>
+					<p>In use</p>
+					<pre><code data-trim contenteditable>
+expect(offer).is.a.offer;
+// vs.
+expect(offer).is.a.mcomm.offer;
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Questions writing chai plugins?</h3>
+				</section>
+
+				<section>
+					<h3>When to and not to<br/>write custom plugins</h3>
+					<h5>aka Points of consideration before diving<br/>head long into chai plugins</h5>
+				</section>
+
+				<section>
+					<h3>Custom Plugins Aren't Free</h3>
 					<ul>
-						<!-- TODO -->
+						<li>Team on-boarding/training</li>
+						<li>Ambiguity / Sizing</li>
+						<li>Time to implement</li>
+						<li>Future maintenance / backwards compatibilty</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Team on-boarding/training</h3>
 					<ul>
+						<li>How will people know and remember they exist?</li>
+						<li>Are the plugins discoverable?</li>
+						<li>How do I know how to use them? (e.g. documentation)</li>
+						<li>Overall project design vs. just-in-time creation</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Ambiguity / Sizing</h3>
+					<ul>
+						<li>Is the proprety or method the smallest it can be?</li>
+						<li>How do you know you got all the cases?</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Time to implement</h3>
+					<ul>
+						<li>Do we write unit tests for chai plugins?</li>
+						<li>Do all chai plugins need to be (and incur the overhead of) an NPM module?</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Future maintenance</h3>
+					<ul>
+						<li>How often will this need to change?</li>
+						<li>Will the chai plugins need to be re-written every time a refactor happens?</li>
+						<li>If it becomes an NPM module how are breaking changes handled?</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Any final questions?</h3>
+					<small>just wanted to point out this presentation was 100% meme free,<br/>which is kind of an accomplishment</small>
 				</section>
 
 			</div>
